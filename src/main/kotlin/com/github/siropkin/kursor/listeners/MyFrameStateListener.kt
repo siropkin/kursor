@@ -76,10 +76,12 @@ internal class MyFrameStateListener : FrameStateListener {
                 }
 
                 override fun keyReleased(e: KeyEvent?) {
-                    Thread {
-                        Thread.sleep(100)
-                        updateCaretVisualAttributes(getLanguage())
-                    }.start()
+                    e?.let {
+                        Thread {
+                            Thread.sleep(300)
+                            updateCaretVisualAttributes(getLanguage())
+                        }.start()
+                    }
                 }
             })
         }
