@@ -66,24 +66,23 @@ internal class MyFrameStateListener : FrameStateListener {
         updateCaretVisualAttributes(getLanguage())
 
         // add key listener to editor
-         EditorFactory.getInstance().allEditors.forEach {
-             val editor = it
-             editor.contentComponent.addKeyListener(object : KeyListener {
-                 override fun keyTyped(e: KeyEvent) {
-                     updateCaretVisualAttributes(getLanguage())
-                 }
+        EditorFactory.getInstance().allEditors.forEach {
+            val editor = it
+            editor.contentComponent.addKeyListener(object : KeyListener {
+                override fun keyTyped(e: KeyEvent) {
+                }
 
-                 override fun keyPressed(e: KeyEvent?) {
-                     updateCaretVisualAttributes(getLanguage())
-                 }
+                override fun keyPressed(e: KeyEvent?) {
+                }
 
-                 override fun keyReleased(e: KeyEvent?) {
-                     updateCaretVisualAttributes(getLanguage())
-                 }
-
-             }
-                )
-            }
+                override fun keyReleased(e: KeyEvent?) {
+                    Thread {
+                        Thread.sleep(100)
+                        updateCaretVisualAttributes(getLanguage())
+                    }.start()
+                }
+            })
+        }
     }
 
     override fun onFrameDeactivated() {
