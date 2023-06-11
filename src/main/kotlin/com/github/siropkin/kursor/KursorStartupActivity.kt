@@ -14,6 +14,8 @@ class KursorStartupActivity: StartupActivity {
         kursor.saveDefaultCaretVisualAttributes()
         kursor.updateCaretVisualAttributes()
 
+        // TODO: Add listener for cases when user changes language using OS UI
+
         // add frame state listener
         val connection = ApplicationManager.getApplication().messageBus.connect()
         connection.subscribe(FrameStateListener.TOPIC, object : FrameStateListener {
