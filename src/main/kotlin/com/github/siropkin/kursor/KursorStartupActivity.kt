@@ -9,15 +9,8 @@ import java.awt.event.KeyEvent
 
 class KursorStartupActivity: StartupActivity {
     private var kursor: Kursor = Kursor()
-    private var firstInitializationOccurred = false
 
     override fun runActivity(project: Project) {
-        if (firstInitializationOccurred) {
-            return
-        }
-
-        firstInitializationOccurred = true
-
         kursor.saveDefaultCaretVisualAttributes()
         kursor.updateCaretVisualAttributes()
 

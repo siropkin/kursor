@@ -6,7 +6,7 @@ import java.awt.Color
 import java.awt.im.InputContext
 
 class Kursor {
-    private var defaultCaretVisualAttributes: CaretVisualAttributes = CaretVisualAttributes(null, CaretVisualAttributes.Weight.NORMAL)
+    private var defaultCaretVisualAttributes: CaretVisualAttributes? = null
     private var customCaretVisualAttributes: CaretVisualAttributes = CaretVisualAttributes(Color.RED, CaretVisualAttributes.Weight.HEAVY, CaretVisualAttributes.Shape.BLOCK, 1.0f)
 
     // get current language
@@ -31,14 +31,16 @@ class Kursor {
 
     // save default caret visual attributes
     fun saveDefaultCaretVisualAttributes() {
-        defaultCaretVisualAttributes = getCaretVisualAttributes()
+        if (defaultCaretVisualAttributes == null) {
+            defaultCaretVisualAttributes = getCaretVisualAttributes()
+        }
     }
 
     // update caret visual attributes based on current language
     fun updateCaretVisualAttributes() {
         val language = getLanguage()
         if (language == "en") {
-            setCaretVisualAttributes(defaultCaretVisualAttributes)
+            setCaretVisualAttributes(defaultCaretVisualAttributes!!)
         } else {
             setCaretVisualAttributes(customCaretVisualAttributes)
         }
