@@ -1,18 +1,23 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin require-restart="true">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <vendor>siropkin</vendor>
+    <version>0.0.1</version>
+    <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
+
+    <description><![CDATA[
+        Plugin for IntelliJ IDEA that allows to change cursor shape and color depending on the current language.
+    ]]></description>
+
+    <change-notes><![CDATA[
+        0.0.1 (2023-06-06)<br />
+        ++++++++++++++++++<br />
+        <br />
+        Initial release.
+    ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
-
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.siropkin.kursor.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <postStartupActivity implementation="com.github.siropkin.kursor.KursorStartupActivity" />
     </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.siropkin.kursor.listeners.MyFrameStateListener" topic="com.intellij.ide.FrameStateListener"/>
-    </applicationListeners>
 </idea-plugin>
