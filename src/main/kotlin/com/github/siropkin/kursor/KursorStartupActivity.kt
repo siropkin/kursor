@@ -18,26 +18,19 @@ class KursorStartupActivity: StartupActivity {
         // add kursor to all existing editors
         val editors: Array<Editor> = EditorFactory.getInstance().allEditors
         for (editor in editors) {
-            val kursor = Kursor(editor)
-            kursors[editor] = kursor
+            kursors[editor] = Kursor(editor)
         }
 
         // add editor factory listener to track editor creation and deletion
         EditorFactory.getInstance().addEditorFactoryListener(object : EditorFactoryListener {
             override fun editorCreated(event: EditorFactoryEvent) {
-                val editor: Editor? = event.editor
-                if (editor != null) {
-                    val kursor = Kursor(editor)
-                    kursors[editor] = kursor
-                }
-
+                val editor: Editor = event.editor
+                kursors[editor] = Kursor(editor)
             }
 
             override fun editorReleased(event: EditorFactoryEvent) {
-                val editor: Editor? = event.editor
-                if (editor != null) {
-                    kursors.remove(editor)
-                }
+                val editor: Editor = event.editor
+                kursors.remove(editor)
             }
         }, project)
 
@@ -54,7 +47,6 @@ class KursorStartupActivity: StartupActivity {
         // add key listener
         IdeEventQueue.getInstance().addDispatcher({ event ->
             if (event is KeyEvent) {
-                // repaint all kursors
                 kursors.forEach { (_, kursor) -> kursor.repaint() }
             }
             false
