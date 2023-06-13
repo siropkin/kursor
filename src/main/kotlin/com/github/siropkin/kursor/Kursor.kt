@@ -1,11 +1,8 @@
 package com.github.siropkin.kursor
 
-import com.intellij.codeInsight.codeVision.ui.visibleAreaChanged
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.event.CaretEvent
 import com.intellij.openapi.editor.event.CaretListener
-import com.intellij.openapi.editor.event.VisibleAreaEvent
 import java.awt.*
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
@@ -78,6 +75,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
+        this.bounds = editor.contentComponent.bounds
         var language = getLanguage()
         val isCapsLockOn = isCapsLockOn()
         if (isCapsLockOn) {
