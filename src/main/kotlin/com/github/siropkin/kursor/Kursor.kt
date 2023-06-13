@@ -12,10 +12,6 @@ import java.awt.im.InputContext
 import java.util.*
 import javax.swing.JComponent
 
-// TODO: show and hide g when caret is blinking
-//val blinkPeriod = editor.settings.caretBlinkPeriod
-//if (blinkPeriod > 0) { }
-
 object Position {
     const val TOP = "top"
     const val BOTTOM = "bottom"
@@ -23,10 +19,18 @@ object Position {
 }
 
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    private val defaultLanguage = "en"
-    private val defaultAlpha = 180
-    private val defaultPosition = Position.TOP
-    // TODO: Add option to change color
+    private val defaultLanguage = null // "en"
+    private val defaultIndicateCapsLock = true
+
+    private val defaultFontFamily = editor.colorsScheme.fontPreferences.fontFamily
+    private val defaultFontStyle = Font.PLAIN
+    private val defaultFontSize = 11
+
+    private val defaultColor = editor.colorsScheme.getColor(EditorColors.CARET_COLOR)
+    private val defaultAlpha = 180 // 0..255
+
+    private val defaultVerticalPosition = Position.TOP
+    private val defaultHorizontalOffset = 4
 
     init {
         editor.contentComponent.add(this)
@@ -37,12 +41,12 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     }
 
     override fun componentResized(e: ComponentEvent?) {
-        bounds = getMyBounds()
+        bounds = getEditorBounds()
         repaint()
     }
 
     override fun componentMoved(e: ComponentEvent?) {
-        bounds = getMyBounds()
+        bounds = getEditorBounds()
         repaint()
     }
 
@@ -53,7 +57,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     }
 
     override fun caretPositionChanged(e: CaretEvent) {
-        bounds = getMyBounds()
+        bounds = getEditorBounds()
         repaint()
     }
 
@@ -67,13 +71,21 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         return toolkit.getLockingKeyState(KeyEvent.VK_CAPS_LOCK)
     }
 
+    private fun isEditorFocused(): Boolean {
+        return editor.contentComponent.isFocusOwner
+    }
+
+    private fun getEditorBounds(): Rectangle {
+        val area = editor.scrollingModel.visibleArea
+        return Rectangle(area.x, area.y, area.width, area.height)
+    }
+
     private fun getCaretPosition(caret: Caret): Point {
         val p: Point = editor.visualPositionToXY(caret.visualPosition)
         p.translate(-location.x, -location.y)
         return p
     }
 
-    // get caret height
     private fun getCaretHeight(): Int {
         val caret = editor.caretModel.primaryCaret
         val p1 = editor.visualPositionToXY(caret.visualPosition)
@@ -81,38 +93,39 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         return p2.y - p1.y
     }
 
-    private fun getMyBounds(): Rectangle {
-        val area = editor.scrollingModel.visibleArea
-        return Rectangle(area.x, area.y, area.width, area.height)
-    }
-
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
-        if (!editor.contentComponent.isFocusOwner) {
+
+        if (!isEditorFocused()) {
             return
         }
+
         var language = getLanguage()
         val isCapsLockOn = isCapsLockOn()
-        if (language == defaultLanguage && !isCapsLockOn) {
+
+        if (language == defaultLanguage && (!defaultIndicateCapsLock || !isCapsLockOn)) {
             return
         }
-        if (isCapsLockOn) {
+
+        if (defaultIndicateCapsLock && isCapsLockOn) {
             language = language.uppercase(Locale.getDefault())
         }
-        val offsetX = 4
+
+        val font = Font(defaultFontFamily, defaultFontStyle, defaultFontSize)
+        val color = defaultColor?.let { Color(it.red, it.green, it.blue, defaultAlpha) }
+
+        val offsetX = defaultHorizontalOffset
         var offsetY = 0
-        when (defaultPosition) {
-            Position.TOP -> offsetY = 0
-            // TODO: fix offsetY for different fonts
-            Position.BOTTOM -> offsetY = getCaretHeight() + if (isCapsLockOn) { 6 } else { 3 }
-            Position.MIDDLE -> offsetY = editor.colorsScheme.editorFontSize
+        when (defaultVerticalPosition) {
+            Position.TOP -> offsetY = defaultFontSize / 2 - 1
+            Position.BOTTOM -> offsetY = getCaretHeight() + 3
+            Position.MIDDLE -> offsetY = getCaretHeight() / 2 + defaultFontSize / 2 - 1
         }
+
         editor.caretModel.allCarets.forEach { caret ->
             val caretPosition = getCaretPosition(caret)
-            val color = caret.visualAttributes.color ?: editor.colorsScheme.getColor(EditorColors.CARET_COLOR)
-            if (color != null) {
-                g.color = Color(color.red, color.green, color.blue, defaultAlpha)
-            }
+            g.color = color!!
+            g.font = font
             g.drawString(language, caretPosition.x + offsetX, caretPosition.y + offsetY)
         }
     }
