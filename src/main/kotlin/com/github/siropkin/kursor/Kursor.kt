@@ -16,21 +16,24 @@ import javax.swing.JComponent
 //if (blinkPeriod > 0) { }
 
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    private val initLocation = editor.scrollingModel.visibleArea.location
+    private val initHorizontalScrollOffset = editor.scrollingModel.horizontalScrollOffset
+    private val initVerticalScrollOffset = editor.scrollingModel.verticalScrollOffset
 
     init {
         editor.contentComponent.add(this)
-        this.isVisible = true
-        this.bounds = editor.contentComponent.bounds
+        isVisible = true
+        bounds = editor.contentComponent.bounds
         editor.caretModel.addCaretListener(this)
         editor.component.addComponentListener(this)
     }
 
     override fun componentResized(e: ComponentEvent?) {
+        bounds = editor.contentComponent.bounds
         repaint()
     }
 
     override fun componentMoved(e: ComponentEvent?) {
+        bounds = editor.contentComponent.bounds
         repaint()
     }
 
@@ -54,22 +57,22 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         return toolkit.getLockingKeyState(KeyEvent.VK_CAPS_LOCK)
     }
 
-    private fun getPoint(position: VisualPosition, editor: Editor): Point {
-        val p: Point = editor.visualPositionToXY(position)
-        val scrollingModel = editor.scrollingModel
-        val currentLocation = scrollingModel.visibleArea.location
-        p.translate(scrollingModel.horizontalScrollOffset, scrollingModel.verticalScrollOffset)
-        p.translate(initLocation.x, initLocation.y)
-        p.translate(-currentLocation.x, -currentLocation.y)
-        return p
-    }
-
     private fun getCaretPosition(caret: Caret): Point {
-        return getPoint(caret.visualPosition, caret.editor)
+        val p: Point = editor.visualPositionToXY(caret.visualPosition)
+        val scrollingModel = editor.scrollingModel
+        if (initHorizontalScrollOffset == scrollingModel.horizontalScrollOffset && initVerticalScrollOffset == scrollingModel.verticalScrollOffset) {
+            p.translate(initHorizontalScrollOffset, initVerticalScrollOffset)
+        } else {
+            p.translate(-location.x, -location.y)
+        }
+        return p
     }
 
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
+        if (!editor.contentComponent.isFocusOwner) {
+            return
+        }
         var language = getLanguage()
         val isCapsLockOn = isCapsLockOn()
         if (isCapsLockOn) {
