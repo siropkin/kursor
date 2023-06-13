@@ -124,9 +124,13 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
         editor.caretModel.allCarets.forEach { caret ->
             val caretPosition = getCaretPosition(caret)
+            var firstLineOffsetY = 0
+            if (defaultVerticalPosition == Position.TOP && caret.visualPosition.line == 0) {
+                firstLineOffsetY = defaultFontSize / 2
+            }
             g.color = color!!
             g.font = font
-            g.drawString(language, caretPosition.x + offsetX, caretPosition.y + offsetY)
+            g.drawString(language, caretPosition.x + offsetX, caretPosition.y + offsetY + firstLineOffsetY)
         }
     }
 }
