@@ -3,7 +3,6 @@ package com.github.siropkin.kursor
 import com.intellij.ide.FrameStateListener
 import com.intellij.ide.IdeEventQueue
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.EditorFactoryEvent
@@ -21,7 +20,6 @@ class KursorStartupActivity: StartupActivity {
         val editors: Array<Editor> = EditorFactory.getInstance().allEditors
         for (editor in editors) {
             if (kursors[editor] == null) {
-                thisLogger().warn("runActivity - existing: $editor.contentComponent.bounds")
                 kursors[editor] = Kursor(editor)
             }
         }
@@ -31,7 +29,6 @@ class KursorStartupActivity: StartupActivity {
             override fun editorCreated(event: EditorFactoryEvent) {
                 val editor: Editor = event.editor
                 if (kursors[editor] == null) {
-                    thisLogger().warn("runActivity - editorCreated: $editor.contentComponent.bounds")
                     kursors[editor] = Kursor(editor)
                 }
             }
@@ -39,7 +36,6 @@ class KursorStartupActivity: StartupActivity {
             override fun editorReleased(event: EditorFactoryEvent) {
                 val editor: Editor = event.editor
                 if (kursors[editor] != null) {
-                    thisLogger().warn("runActivity - editorReleased: $editor.contentComponent.bounds")
                     kursors.remove(editor)
                 }
             }
@@ -49,7 +45,6 @@ class KursorStartupActivity: StartupActivity {
         val connection = ApplicationManager.getApplication().messageBus.connect()
         connection.subscribe(FrameStateListener.TOPIC, object : FrameStateListener {
             override fun onFrameActivated() {
-                thisLogger().warn("runActivity - onFrameActivated")
                 kursors.forEach { (_, kursor) -> kursor.repaint() }
             }
         })
@@ -58,7 +53,6 @@ class KursorStartupActivity: StartupActivity {
         // add key listener
         IdeEventQueue.getInstance().addDispatcher({ event ->
             if (event is KeyEvent) {
-                thisLogger().warn("runActivity - KeyEvent")
                 kursors.forEach { (_, kursor) -> kursor.repaint() }
             }
             false
