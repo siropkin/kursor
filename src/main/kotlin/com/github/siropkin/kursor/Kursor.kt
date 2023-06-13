@@ -16,24 +16,22 @@ import javax.swing.JComponent
 //if (blinkPeriod > 0) { }
 
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    // save init scroll position
     private val initLocation = editor.scrollingModel.visibleArea.location
 
     init {
         editor.contentComponent.add(this)
-
         this.isVisible = true
         this.bounds = editor.contentComponent.bounds
-
         editor.caretModel.addCaretListener(this)
+        editor.component.addComponentListener(this)
     }
 
     override fun componentResized(e: ComponentEvent?) {
-        this.bounds = editor.contentComponent.bounds
+        repaint()
     }
 
     override fun componentMoved(e: ComponentEvent?) {
-        this.bounds = editor.contentComponent.bounds
+        repaint()
     }
 
     override fun componentShown(e: ComponentEvent?) {
@@ -58,14 +56,11 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
     private fun getPoint(position: VisualPosition, editor: Editor): Point {
         val p: Point = editor.visualPositionToXY(position)
-        // translate to scroll position
         val scrollingModel = editor.scrollingModel
+        val currentLocation = scrollingModel.visibleArea.location
         p.translate(scrollingModel.horizontalScrollOffset, scrollingModel.verticalScrollOffset)
-        // translate to current scroll location
-        val location = scrollingModel.visibleArea.location
-        p.translate(-location.x, -location.y)
-        // translate to init scroll location
         p.translate(initLocation.x, initLocation.y)
+        p.translate(-currentLocation.x, -currentLocation.y)
         return p
     }
 
@@ -75,7 +70,6 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
-        this.bounds = editor.contentComponent.bounds
         var language = getLanguage()
         val isCapsLockOn = isCapsLockOn()
         if (isCapsLockOn) {
