@@ -16,9 +16,6 @@ import javax.swing.JComponent
 //if (blinkPeriod > 0) { }
 
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    private val initHorizontalScrollOffset = editor.scrollingModel.horizontalScrollOffset
-    private val initVerticalScrollOffset = editor.scrollingModel.verticalScrollOffset
-
     init {
         editor.contentComponent.add(this)
         isVisible = true
@@ -28,12 +25,12 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     }
 
     override fun componentResized(e: ComponentEvent?) {
-        bounds = editor.contentComponent.bounds
+        bounds = getMyBounds()
         repaint()
     }
 
     override fun componentMoved(e: ComponentEvent?) {
-        bounds = editor.contentComponent.bounds
+        bounds = getMyBounds()
         repaint()
     }
 
@@ -44,6 +41,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     }
 
     override fun caretPositionChanged(e: CaretEvent) {
+        bounds = getMyBounds()
         repaint()
     }
 
@@ -59,13 +57,13 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
     private fun getCaretPosition(caret: Caret): Point {
         val p: Point = editor.visualPositionToXY(caret.visualPosition)
-        val scrollingModel = editor.scrollingModel
-        if (initHorizontalScrollOffset == scrollingModel.horizontalScrollOffset && initVerticalScrollOffset == scrollingModel.verticalScrollOffset) {
-            p.translate(initHorizontalScrollOffset, initVerticalScrollOffset)
-        } else {
-            p.translate(-location.x, -location.y)
-        }
+        p.translate(-location.x, -location.y)
         return p
+    }
+
+    private fun getMyBounds(): Rectangle {
+        val area = editor.scrollingModel.visibleArea
+        return Rectangle(area.x, area.y, area.width, area.height)
     }
 
     override fun paintComponent(g: Graphics) {
@@ -85,7 +83,6 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         offsetY += if (isCapsLockOn) { 5 } else { 2 }
         editor.caretModel.allCarets.forEach { caret ->
             val caretPosition = getCaretPosition(caret)
-            g.color = caret.visualAttributes.color
             g.drawString(language, caretPosition.x + offsetX, caretPosition.y + offsetY)
         }
     }
