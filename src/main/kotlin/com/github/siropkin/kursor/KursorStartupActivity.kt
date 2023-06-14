@@ -11,7 +11,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import java.awt.event.KeyEvent
 
-// TODO: Add listener for cases when user changes language using OS UI
 class KursorStartupActivity: StartupActivity {
     private val kursors = mutableMapOf<Editor, Kursor>()
 
@@ -49,7 +48,6 @@ class KursorStartupActivity: StartupActivity {
             }
         })
 
-        // TODO: Fix Win + Space issue: if Win released after Space, then Space is not registered
         // add key listener
         IdeEventQueue.getInstance().addDispatcher({ event ->
             if (event is KeyEvent) {
