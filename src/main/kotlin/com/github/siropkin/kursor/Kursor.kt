@@ -21,12 +21,13 @@ object Position {
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
     private val defaultLanguage = "en"
 
+    private val colorizeCaretOnNonDefaultLanguage = true
+    private val caretColorOnDefaultLanguage = editor.colorsScheme.getColor(EditorColors.CARET_COLOR)
+    private val caretColorOnNonDefaultLanguage = Color(255, 0, 0, 255)
+
+    private val showIndicator = true
     private val indicateCapsLock = true
     private val indicateDefaultLanguage = true
-    private val colorizeCaretOnNonDefaultLanguage = true
-
-    private val defaultCaretColor = editor.colorsScheme.getColor(EditorColors.CARET_COLOR)
-    private val caretColorOnNonDefaultLanguage = Color(255, 0, 0, 255)
 
     private val indicatorFontFamily = editor.colorsScheme.fontPreferences.fontFamily
     private val indicatorFontStyle = Font.PLAIN
@@ -142,11 +143,11 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         val caretColor = if (colorizeCaretOnNonDefaultLanguage && language != defaultLanguage) {
             caretColorOnNonDefaultLanguage
         } else {
-            defaultCaretColor
+            caretColorOnDefaultLanguage
         }
         setCaretColor(caret, caretColor)
 
-        val isIndicatorVisible = indicateDefaultLanguage || language != defaultLanguage || indicateCapsLock && isCapsLockOn
+        val isIndicatorVisible = showIndicator && (indicateDefaultLanguage || language != defaultLanguage || indicateCapsLock && isCapsLockOn)
         if (!isIndicatorVisible) {
             return
         }
