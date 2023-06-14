@@ -22,7 +22,6 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     private val defaultLanguage = "en"
 
     private val colorizeCaretOnNonDefaultLanguage = true
-    private val caretColorOnDefaultLanguage = editor.colorsScheme.getColor(EditorColors.CARET_COLOR)
     private val caretColorOnNonDefaultLanguage = Color(255, 0, 0, 255)
 
     private val showIndicator = true
@@ -121,6 +120,10 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         return p2.y - p1.y
     }
 
+    private fun getDefaultCaretColor(): Color? {
+        return editor.colorsScheme.getColor(EditorColors.CARET_COLOR)
+    }
+
     private fun setCaretColor(caret: Caret, color: Color?) {
         caret.visualAttributes = CaretVisualAttributes(color, CaretVisualAttributes.DEFAULT.weight)
     }
@@ -143,7 +146,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         val caretColor = if (colorizeCaretOnNonDefaultLanguage && language != defaultLanguage) {
             caretColorOnNonDefaultLanguage
         } else {
-            caretColorOnDefaultLanguage
+            null
         }
         setCaretColor(caret, caretColor)
 
@@ -166,7 +169,11 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             Position.MIDDLE -> indicatorOffsetY = caretHeight / 2 + indicatorFontSize / 2 - 1
         }
 
-        g.color = caretColor?.let { colorWithAlpha(it, indicatorFontAlpha) }
+        g.color = if (caretColor == null) {
+            colorWithAlpha(getDefaultCaretColor()!!, indicatorFontAlpha)
+        } else {
+            colorWithAlpha(caretColor, indicatorFontAlpha)
+        }
         g.font = Font(indicatorFontFamily, indicatorFontStyle, indicatorFontSize)
         g.drawString(indicatorText, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }
