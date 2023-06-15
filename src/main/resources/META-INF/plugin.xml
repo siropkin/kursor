@@ -18,6 +18,10 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable parentId="appearance"
+                                 instance="com.github.siropkin.kursor.settings.KursorSettingsConfigurable"
+                                 id="org.intellij.sdk.settings.AppSettingsConfigurable" dynamic="true" displayName="Kursor"/>
+        <applicationService serviceImplementation="com.github.siropkin.kursor.settings.KursorSettings"/>
         <postStartupActivity implementation="com.github.siropkin.kursor.KursorStartupActivity" />
     </extensions>
 </idea-plugin>

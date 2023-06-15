@@ -11,6 +11,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import java.awt.event.KeyEvent
 
+
 class KursorStartupActivity: StartupActivity {
     private val kursors = mutableMapOf<Editor, Kursor>()
 

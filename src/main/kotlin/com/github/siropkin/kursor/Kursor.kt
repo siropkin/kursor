@@ -1,5 +1,6 @@
 package com.github.siropkin.kursor
 
+import com.github.siropkin.kursor.settings.KursorSettings
 import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.colors.EditorColors
 import com.intellij.openapi.editor.event.CaretEvent
@@ -12,30 +13,15 @@ import java.awt.im.InputContext
 import java.util.*
 import javax.swing.JComponent
 
+
 object Position {
     const val TOP = "top"
-    const val BOTTOM = "bottom"
     const val MIDDLE = "middle"
+    const val BOTTOM = "bottom"
 }
 
+
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    private val defaultLanguage = "en"
-
-    private val colorizeCaretOnNonDefaultLanguage = true
-    private val caretColorOnNonDefaultLanguage = Color(255, 0, 0, 255)
-
-    private val showIndicator = true
-    private val indicateCapsLock = true
-    private val indicateDefaultLanguage = true
-
-    private val indicatorFontFamily = editor.colorsScheme.fontPreferences.fontFamily
-    private val indicatorFontStyle = Font.PLAIN
-    private val indicatorFontSize = 11
-    private val indicatorFontAlpha = 180 // 0..255
-
-    private val indicatorVerticalPosition = Position.TOP
-    private val indicatorHorizontalOffset = 4
-
     init {
         editor.contentComponent.add(this)
         isVisible = true
@@ -63,6 +49,10 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     override fun caretPositionChanged(e: CaretEvent) {
         bounds = getEditorBounds()
         repaint()
+    }
+
+    private fun getSettings(): KursorSettings {
+        return KursorSettings.getInstance()
     }
 
     private fun getLanguage(): String {
@@ -139,42 +129,44 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             return
         }
 
+        val settings = getSettings()
         val language = getLanguage()
         val isCapsLockOn = isCapsLockOn()
 
         val caret = getPrimaryCaret()
-        val caretColor = if (colorizeCaretOnNonDefaultLanguage && language != defaultLanguage) {
-            caretColorOnNonDefaultLanguage
+        val caretColor = if (settings.changeColorOnNonDefaultLanguage && language != settings.defaultLanguage) {
+            settings.colorOnNonDefaultLanguage
         } else {
             null
         }
         setCaretColor(caret, caretColor)
 
-        val isIndicatorVisible = showIndicator && (indicateDefaultLanguage || language != defaultLanguage || indicateCapsLock && isCapsLockOn)
+        val isIndicatorVisible = settings.showIndicator && (settings.indicateDefaultLanguage || language != settings.defaultLanguage || settings.indicateCapsLock && isCapsLockOn)
         if (!isIndicatorVisible) {
             return
         }
 
-        val indicatorText = if (indicateCapsLock && isCapsLockOn) language.uppercase(Locale.getDefault()) else language
+        val indicatorText = if (settings.indicateCapsLock && isCapsLockOn) language.uppercase(Locale.getDefault()) else language
 
         val caretWidth = getCaretWidth(caret)
         val caretHeight = getCaretHeight(caret)
         val caretPosition = getCaretPosition(caret)
 
-        val indicatorOffsetX = caretWidth + indicatorHorizontalOffset
+        val indicatorOffsetX = caretWidth + settings.indicatorHorizontalOffset
         var indicatorOffsetY = 0
-        when (indicatorVerticalPosition) {
-            Position.TOP -> indicatorOffsetY = (if (caret.visualPosition.line == 0) indicatorFontSize else indicatorFontSize / 2) - 1
+        when (settings.indicatorVerticalPosition) {
+            Position.TOP -> indicatorOffsetY = (if (caret.visualPosition.line == 0) settings.indicatorFontSize else settings.indicatorFontSize / 2) - 1
+            Position.MIDDLE -> indicatorOffsetY = caretHeight / 2 + settings.indicatorFontSize / 2 - 1
             Position.BOTTOM -> indicatorOffsetY = caretHeight + 3
-            Position.MIDDLE -> indicatorOffsetY = caretHeight / 2 + indicatorFontSize / 2 - 1
         }
 
         g.color = if (caretColor == null) {
-            colorWithAlpha(getDefaultCaretColor()!!, indicatorFontAlpha)
+            colorWithAlpha(getDefaultCaretColor()!!, settings.indicatorFontAlpha)
         } else {
-            colorWithAlpha(caretColor, indicatorFontAlpha)
+            colorWithAlpha(caretColor, settings.indicatorFontAlpha)
         }
-        g.font = Font(indicatorFontFamily, indicatorFontStyle, indicatorFontSize)
+
+        g.font = Font(settings.indicatorFontFamily, settings.indicatorFontStyle, settings.indicatorFontSize)
         g.drawString(indicatorText, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }
 }
