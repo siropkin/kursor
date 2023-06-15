@@ -28,7 +28,7 @@ class KursorSettingsComponent {
     private val indicateCapsLockComponent = JBCheckBox("Indicate Caps Lock")
     private val indicateDefaultLanguageComponent = JBCheckBox("Show default language")
 
-    private val indicatorFontFamilyComponent = JComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames)
+    private val indicatorFontNameComponent = JComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames)
     private val indicatorFontStyleComponent = JComboBox(arrayOf(Font.PLAIN.toString(), Font.BOLD.toString(), Font.ITALIC.toString()))
     private val indicatorFontSizeComponent = JBTextField()
     private val indicatorFontAlphaComponent = JBTextField()
@@ -85,10 +85,10 @@ class KursorSettingsComponent {
             indicateDefaultLanguageComponent.isSelected = value
         }
 
-    var indicatorFontFamily: String
-        get() = indicatorFontFamilyComponent.selectedItem as String
+    var indicatorFontName: String
+        get() = indicatorFontNameComponent.selectedItem as String
         set(value) {
-            indicatorFontFamilyComponent.selectedItem = value
+            indicatorFontNameComponent.selectedItem = value
         }
 
     var indicatorFontStyle: Int
@@ -166,7 +166,7 @@ class KursorSettingsComponent {
         fontPanel.alignmentX = LEFT_ALIGNMENT
         fontPanel.layout = BoxLayout(fontPanel, BoxLayout.X_AXIS)
         fontPanel.add(JBLabel("Font"))
-        fontPanel.add(indicatorFontFamilyComponent)
+        fontPanel.add(indicatorFontNameComponent)
         checkBoxPanel.add(Box.createHorizontalStrut(15))
         fontPanel.add(JBLabel("Size"))
         fontPanel.add(indicatorFontSizeComponent)
@@ -174,14 +174,14 @@ class KursorSettingsComponent {
         fontPanel.add(JBLabel("Opacity"))
         fontPanel.add(indicatorFontAlphaComponent)
 
-        indicatorFontFamilyComponent.maximumSize = Dimension(200, indicatorFontFamilyComponent.preferredSize.height)
+        indicatorFontNameComponent.maximumSize = Dimension(200, indicatorFontNameComponent.preferredSize.height)
         indicatorFontSizeComponent.maximumSize = Dimension(50, indicatorFontSizeComponent.preferredSize.height)
         indicatorFontAlphaComponent.maximumSize = Dimension(50, indicatorFontAlphaComponent.preferredSize.height)
 
         showIndicatorComponent.addChangeListener {
             indicateDefaultLanguageComponent.isEnabled = showIndicator
             indicateCapsLockComponent.isEnabled = showIndicator
-            indicatorFontFamilyComponent.isEnabled = showIndicator
+            indicatorFontNameComponent.isEnabled = showIndicator
             indicatorFontStyleComponent.isEnabled = showIndicator
             indicatorFontSizeComponent.isEnabled = showIndicator
             indicatorFontAlphaComponent.isEnabled = showIndicator

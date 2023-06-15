@@ -13,19 +13,19 @@ import java.awt.Font
 
 @State(
     name = "package com.github.siropkin.kursor.settings.KursorSettings",
-    storages = [Storage("KursorSettings.xml")]
+    storages = [Storage("Kursor.xml")]
 )
 class KursorSettings : PersistentStateComponent<KursorSettings> {
     var defaultLanguage: String = "en"
 
     var changeColorOnNonDefaultLanguage: Boolean = true
-    var colorOnNonDefaultLanguage: Color = Color(255, 0, 0, 255)
+    var colorOnNonDefaultLanguage: Color = Color(255, 140, 0)
 
     var showIndicator: Boolean = true
     var indicateCapsLock: Boolean = true
     var indicateDefaultLanguage: Boolean = true
 
-    var indicatorFontFamily: String = EditorColorsManager.getInstance().globalScheme.editorFontName
+    var indicatorFontName: String = EditorColorsManager.getInstance().globalScheme.editorFontName
     var indicatorFontStyle: Int = Font.PLAIN
     var indicatorFontSize: Int = 11
     var indicatorFontAlpha: Int = 180

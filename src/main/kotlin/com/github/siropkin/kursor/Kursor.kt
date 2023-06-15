@@ -139,7 +139,9 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         } else {
             null
         }
-        setCaretColor(caret, caretColor)
+        if (caret.visualAttributes.color != caretColor) {
+            setCaretColor(caret, caretColor)
+        }
 
         val isIndicatorVisible = settings.showIndicator && (settings.indicateDefaultLanguage || language != settings.defaultLanguage || settings.indicateCapsLock && isCapsLockOn)
         if (!isIndicatorVisible) {
@@ -160,13 +162,12 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             Position.BOTTOM -> indicatorOffsetY = caretHeight + 3
         }
 
+        g.font = Font(settings.indicatorFontName, settings.indicatorFontStyle, settings.indicatorFontSize)
         g.color = if (caretColor == null) {
             colorWithAlpha(getDefaultCaretColor()!!, settings.indicatorFontAlpha)
         } else {
             colorWithAlpha(caretColor, settings.indicatorFontAlpha)
         }
-
-        g.font = Font(settings.indicatorFontFamily, settings.indicatorFontStyle, settings.indicatorFontSize)
         g.drawString(indicatorText, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }
 }

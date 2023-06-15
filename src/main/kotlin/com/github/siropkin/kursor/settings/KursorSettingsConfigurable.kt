@@ -2,7 +2,6 @@ package com.github.siropkin.kursor.settings
 
 import com.intellij.openapi.options.Configurable
 import javax.swing.JComponent
-import javax.swing.JPanel
 
 
 class KursorSettingsConfigurable: Configurable {
@@ -30,7 +29,7 @@ class KursorSettingsConfigurable: Configurable {
                     || it.showIndicator != settings.showIndicator
                     || it.indicateCapsLock != settings.indicateCapsLock
                     || it.indicateDefaultLanguage != settings.indicateDefaultLanguage
-                    || it.indicatorFontFamily != settings.indicatorFontFamily
+                    || it.indicatorFontName != settings.indicatorFontName
                     || it.indicatorFontStyle != settings.indicatorFontStyle
                     || it.indicatorFontSize != settings.indicatorFontSize
                     || it.indicatorFontAlpha != settings.indicatorFontAlpha
@@ -48,7 +47,7 @@ class KursorSettingsConfigurable: Configurable {
         settings.showIndicator = settingsComponent!!.showIndicator
         settings.indicateCapsLock = settingsComponent!!.indicateCapsLock
         settings.indicateDefaultLanguage = settingsComponent!!.indicateDefaultLanguage
-        settings.indicatorFontFamily = settingsComponent!!.indicatorFontFamily
+        settings.indicatorFontName = settingsComponent!!.indicatorFontName
         settings.indicatorFontStyle = settingsComponent!!.indicatorFontStyle
         settings.indicatorFontSize = settingsComponent!!.indicatorFontSize
         settings.indicatorFontAlpha = settingsComponent!!.indicatorFontAlpha
@@ -65,7 +64,7 @@ class KursorSettingsConfigurable: Configurable {
             it.showIndicator = settings.showIndicator
             it.indicateCapsLock = settings.indicateCapsLock
             it.indicateDefaultLanguage = settings.indicateDefaultLanguage
-            it.indicatorFontFamily = settings.indicatorFontFamily
+            it.indicatorFontName = settings.indicatorFontName
             it.indicatorFontStyle = settings.indicatorFontStyle
             it.indicatorFontSize = settings.indicatorFontSize
             it.indicatorFontAlpha = settings.indicatorFontAlpha
