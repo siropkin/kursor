@@ -78,8 +78,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     }
 
     private fun getEditorBounds(): Rectangle {
-        val area = editor.scrollingModel.visibleArea
-        return Rectangle(area.x, area.y, area.width, area.height)
+        return editor.scrollingModel.visibleArea
     }
 
     private fun getPrimaryCaret(): Caret {
@@ -155,11 +154,11 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         val caretPosition = getCaretPosition(caret)
 
         val indicatorOffsetX = caretWidth + settings.indicatorHorizontalOffset
-        var indicatorOffsetY = 0
-        when (settings.indicatorVerticalPosition) {
-            Position.TOP -> indicatorOffsetY = (if (caret.visualPosition.line == 0) settings.indicatorFontSize else settings.indicatorFontSize / 2) - 1
-            Position.MIDDLE -> indicatorOffsetY = caretHeight / 2 + settings.indicatorFontSize / 2 - 1
-            Position.BOTTOM -> indicatorOffsetY = caretHeight + 3
+        val indicatorOffsetY = when (settings.indicatorVerticalPosition) {
+            Position.TOP -> (if (caret.visualPosition.line == 0) settings.indicatorFontSize else settings.indicatorFontSize / 2) - 1
+            Position.MIDDLE -> caretHeight / 2 + settings.indicatorFontSize / 2 - 1
+            Position.BOTTOM -> caretHeight + 3
+            else -> 0
         }
 
         g.font = Font(settings.indicatorFontName, settings.indicatorFontStyle, settings.indicatorFontSize)
