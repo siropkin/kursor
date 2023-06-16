@@ -1,8 +1,6 @@
 package com.github.siropkin.kursor
 
-import com.intellij.ide.FrameStateListener
 import com.intellij.ide.IdeEventQueue
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.EditorFactoryEvent
