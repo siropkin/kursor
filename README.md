@@ -4,6 +4,12 @@
 <h1 align="center">Kursor</h1>
 <p align="center">JetBrains IDEA plugin for tracking keyboard language</p>
 
+<p align="center">
+    <a href="https://plugins.jetbrains.com/plugin/22072-kursor"><img src="https://img.shields.io/jetbrains/plugin/r/stars/22072?style=flat-square"></a>
+    <a href="https://plugins.jetbrains.com/embeddable/install/22072"><img src="https://img.shields.io/jetbrains/plugin/d/22072-kursor.svg?style=flat-square"></a>
+    <a href="https://plugins.jetbrains.com/plugin/22072-kursor"><img src="https://img.shields.io/jetbrains/plugin/v/22072-kursor.svg?style=flat-square"></a>
+</p>
+
 ![](https://github.com/siropkin/kursor/blob/main/screenshots/kurso.gif)
 
 <!-- Plugin description -->
@@ -14,7 +20,11 @@ It shows the current language on the cursor and lets you change the cursor color
 It's useful for developers who work with multiple languages and want to avoid typing errors.
 <!-- Plugin description end -->
 
-## Installation
+## Install
+
+<iframe width="245px" height="48px" src="https://plugins.jetbrains.com/embeddable/install/22072"></iframe>
+
+Or you could install it inside your IDE:
 
 For Windows & Linux - <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "Kursor"</kbd> > <kbd>Install Plugin</kbd> > <kbd>Restart IntelliJ IDEA</kbd>
 
