@@ -7,7 +7,7 @@
 <br>
 
 <!-- Plugin description -->
-![]('./screenshots/settings.png')
+![](https://github.com/siropkin/kursor/blob/main/screenshots/kurso.gif)
 
 Kursor is a simple JetBrains IDEA plugin that helps you keep track of your keyboard language.
 
