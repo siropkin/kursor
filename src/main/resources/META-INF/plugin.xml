@@ -1,15 +1,17 @@
 <idea-plugin require-restart="true">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <version>0.0.2</version>
+    <version>1.0.0</version>
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
-        Plugin for IntelliJ IDEA that allows to change cursor shape and color depending on the current language.
+        Kursor is a simple JetBrains IDEA plugin that helps you keep track of your keyboard language.<br />
+        It shows the current language on the cursor and lets you change the cursor color based on the language.<br />
+        It's useful for developers who work with multiple languages and want to avoid typing errors.
     ]]></description>
 
     <change-notes><![CDATA[
-        0.0.1 (2023-06-06)<br />
+        1.0.0 (2023-16-06)<br />
         ++++++++++++++++++<br />
         <br />
         Initial release.
