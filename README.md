@@ -22,7 +22,9 @@ It's useful for developers who work with multiple languages and want to avoid ty
 
 ## Install
 
-<iframe width="245px" height="48px" src="https://plugins.jetbrains.com/embeddable/install/22072"></iframe>
+<a href="https://plugins.jetbrains.com/embeddable/install/22072">
+    <img src="https://user-images.githubusercontent.com/12044174/123105697-94066100-d46a-11eb-9832-338cdf4e0612.png" width="300"/>
+</a>
 
 Or you could install it inside your IDE:
 
