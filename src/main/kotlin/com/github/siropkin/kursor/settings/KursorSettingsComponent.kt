@@ -7,10 +7,12 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import java.awt.*
-import java.awt.Component.LEFT_ALIGNMENT
 import java.util.*
 import javax.swing.*
 
+
+private const val LABEL_SPACING = 10
+private const val COMPONENT_SPACING = 35
 
 class KursorSettingsComponent {
     private val availableLanguages = Locale.getAvailableLocales()
@@ -37,7 +39,7 @@ class KursorSettingsComponent {
     private val indicatorHorizontalOffsetComponent = JBTextField()
 
     var panel: JPanel = FormBuilder.createFormBuilder()
-        .addLabeledComponent("Default language", defaultLanguageComponent, 1, false)
+        .addLabeledComponent("Default language:", defaultLanguageComponent, 1, false)
         .addComponent(createColorPanel())
         .addComponent(createIndicatorPanel())
         .addComponent(createPositionPanel())
@@ -101,7 +103,7 @@ class KursorSettingsComponent {
         get() = indicatorFontSizeComponent.text.toInt()
         set(value) {
             try {
-                val intValue = Integer.parseInt(value.toString());
+                val intValue = Integer.parseInt(value.toString())
                 indicatorFontSizeComponent.text = intValue.coerceAtLeast(5).coerceAtMost(20).toString()
             } catch (_: NumberFormatException) {
                 // indicatorFontSizeComponent.text = ""
@@ -112,7 +114,7 @@ class KursorSettingsComponent {
         get() = indicatorFontAlphaComponent.text.toInt()
         set(value) {
             try {
-                val intValue = Integer.parseInt(value.toString());
+                val intValue = Integer.parseInt(value.toString())
                 indicatorFontAlphaComponent.text = intValue.coerceAtLeast(0).coerceAtMost(255).toString()
             } catch (_: NumberFormatException) {
                 // indicatorFontAlphaComponent.text = ""
@@ -129,7 +131,7 @@ class KursorSettingsComponent {
         get() = indicatorHorizontalOffsetComponent.text.toInt()
         set(value) {
             try {
-                val intValue = Integer.parseInt(value.toString());
+                val intValue = Integer.parseInt(value.toString())
                 indicatorHorizontalOffsetComponent.text = intValue.coerceAtLeast(-10).coerceAtMost(10).toString()
             } catch (_: NumberFormatException) {
                 // indicatorHorizontalOffsetComponent.text = ""
@@ -138,12 +140,9 @@ class KursorSettingsComponent {
 
     private fun createColorPanel(): JPanel {
         val colorPanel = JPanel()
-        colorPanel.layout = BoxLayout(colorPanel, BoxLayout.X_AXIS)
-        colorPanel.add(changeColorOnNonDefaultLanguageComponent)
-        colorPanel.add(Box.createHorizontalStrut(15))
-        colorPanel.add(colorOnNonDefaultLanguageComponent)
-
-        colorOnNonDefaultLanguageComponent.maximumSize = Dimension(80, colorOnNonDefaultLanguageComponent.preferredSize.height)
+        colorPanel.layout = GridBagLayout()
+        colorPanel.add(changeColorOnNonDefaultLanguageComponent, createRbc(0, 0, 0.0))
+        colorPanel.add(colorOnNonDefaultLanguageComponent, createRbc(1, 0, 1.0, LABEL_SPACING))
 
         changeColorOnNonDefaultLanguageComponent.addChangeListener {
             colorOnNonDefaultLanguageComponent.isEnabled = changeColorOnNonDefaultLanguage
@@ -154,29 +153,19 @@ class KursorSettingsComponent {
 
     private fun createIndicatorPanel(): JPanel {
         val checkBoxPanel = JPanel()
-        checkBoxPanel.alignmentX = LEFT_ALIGNMENT
-        checkBoxPanel.layout = BoxLayout(checkBoxPanel, BoxLayout.X_AXIS)
-        checkBoxPanel.add(showIndicatorComponent)
-        checkBoxPanel.add(Box.createHorizontalStrut(15))
-        checkBoxPanel.add(indicateDefaultLanguageComponent)
-        checkBoxPanel.add(Box.createHorizontalStrut(15))
-        checkBoxPanel.add(indicateCapsLockComponent)
+        checkBoxPanel.layout = GridBagLayout()
+        checkBoxPanel.add(showIndicatorComponent, createRbc(0, 0, 0.0))
+        checkBoxPanel.add(indicateDefaultLanguageComponent, createRbc(1, 0, 0.0, COMPONENT_SPACING))
+        checkBoxPanel.add(indicateCapsLockComponent, createRbc(2, 0, 1.0, COMPONENT_SPACING))
 
         val fontPanel = JPanel()
-        fontPanel.alignmentX = LEFT_ALIGNMENT
-        fontPanel.layout = BoxLayout(fontPanel, BoxLayout.X_AXIS)
-        fontPanel.add(JBLabel("Font"))
-        fontPanel.add(indicatorFontNameComponent)
-        checkBoxPanel.add(Box.createHorizontalStrut(15))
-        fontPanel.add(JBLabel("Size"))
-        fontPanel.add(indicatorFontSizeComponent)
-        checkBoxPanel.add(Box.createHorizontalStrut(15))
-        fontPanel.add(JBLabel("Opacity"))
-        fontPanel.add(indicatorFontAlphaComponent)
-
-        indicatorFontNameComponent.maximumSize = Dimension(200, indicatorFontNameComponent.preferredSize.height)
-        indicatorFontSizeComponent.maximumSize = Dimension(50, indicatorFontSizeComponent.preferredSize.height)
-        indicatorFontAlphaComponent.maximumSize = Dimension(50, indicatorFontAlphaComponent.preferredSize.height)
+        fontPanel.layout = GridBagLayout()
+        fontPanel.add(JBLabel("Font:"), createRbc(0, 0, 0.0))
+        fontPanel.add(indicatorFontNameComponent, createRbc(1, 0, 0.0, LABEL_SPACING))
+        fontPanel.add(JBLabel("Size:"), createRbc(2, 0, 0.0, COMPONENT_SPACING))
+        fontPanel.add(indicatorFontSizeComponent, createRbc(3, 0, 0.0, LABEL_SPACING))
+        fontPanel.add(JBLabel("Opacity:"), createRbc(4, 0, 0.0, COMPONENT_SPACING))
+        fontPanel.add(indicatorFontAlphaComponent, createRbc(5, 0, 1.0, LABEL_SPACING))
 
         showIndicatorComponent.addChangeListener {
             indicateDefaultLanguageComponent.isEnabled = showIndicator
@@ -199,16 +188,35 @@ class KursorSettingsComponent {
 
     private fun createPositionPanel(): JPanel {
         val positionPanel = JPanel()
-        positionPanel.layout = BoxLayout(positionPanel, BoxLayout.X_AXIS)
-        positionPanel.add(JBLabel("Vertical position"))
-        positionPanel.add(indicatorVerticalPositionComponent)
-        positionPanel.add(Box.createHorizontalStrut(15))
-        positionPanel.add(JBLabel("Horizontal offset"))
-        positionPanel.add(indicatorHorizontalOffsetComponent)
+        positionPanel.layout = GridBagLayout()
+        positionPanel.add(JBLabel("Vertical position:"), createRbc(0, 0, 0.0))
+        positionPanel.add(indicatorVerticalPositionComponent, createRbc(1, 0, 0.0, LABEL_SPACING))
+        positionPanel.add(JBLabel("Horizontal offset:"), createRbc(2, 0, 0.0, COMPONENT_SPACING))
+        positionPanel.add(indicatorHorizontalOffsetComponent, createRbc(3, 0, 1.0, LABEL_SPACING))
 
         indicatorVerticalPositionComponent.maximumSize = Dimension(200, indicatorVerticalPositionComponent.preferredSize.height)
         indicatorHorizontalOffsetComponent.maximumSize = Dimension(100, indicatorHorizontalOffsetComponent.preferredSize.height)
 
         return positionPanel
+    }
+
+    private fun createRbc(x: Int, y: Int, weightx: Double): GridBagConstraints {
+        return createRbc(x, y, weightx, null)
+    }
+
+    private fun createRbc(x: Int, y: Int, weightx: Double, paddingLeft: Int?): GridBagConstraints {
+        val gbc = GridBagConstraints()
+        gbc.gridx = x
+        gbc.gridy = y
+        gbc.gridwidth = 1
+        gbc.gridheight = 1
+
+        gbc.anchor = GridBagConstraints.WEST
+        gbc.fill = GridBagConstraints.NONE
+
+        gbc.weightx = weightx
+        gbc.weighty = 1.0
+        gbc.insets = Insets(10, paddingLeft ?: 0, 0, 0)
+        return gbc
     }
 }
