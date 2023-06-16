@@ -21,5 +21,19 @@ For Windows & Linux - <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd>
 For Mac - <kbd>IntelliJ IDEA</kbd> > <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "Kursor"</kbd> > <kbd>Install Plugin</kbd>  > <kbd>Restart IntelliJ IDEA</kbd>
 
 
+## Settings
+<img src="./screenshots/settings.png" alt="settings"/>
+
+- Default language - default language
+- Change color on non-default language - change cursor color if language is not default
+- Show text indicator - show language indicator on the cursor (if disabled, only cursor color will be changed)
+- Show default language - if disabled, default language will not be shown on the cursor
+- Indicate Caps Lock - show Caps Lock indicator on the cursor (language will be in uppercase)
+- Font - font of the language indicator
+- Size - font size of the language indicator
+- Opacity - opacity of the language indicator (0 - transparent, 255 - opaque)
+- Vertical position - vertical position of the language indicator (top, middle, or bottom)
+- Horizontal offset - horizontal offset of the language indicator
+
 ## Buy Me a Coffee
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ivan.seredkin)
