@@ -41,14 +41,6 @@ class KursorStartupActivity: StartupActivity {
             }
         }, project)
 
-        // add frame state listener
-        val connection = ApplicationManager.getApplication().messageBus.connect()
-        connection.subscribe(FrameStateListener.TOPIC, object : FrameStateListener {
-            override fun onFrameActivated() {
-                kursors.forEach { (_, kursor) -> kursor.repaint() }
-            }
-        })
-
         // add key listener
         IdeEventQueue.getInstance().addDispatcher({ event ->
             if (event is KeyEvent) {
