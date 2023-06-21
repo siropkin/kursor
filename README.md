@@ -13,7 +13,7 @@
 ![](https://github.com/siropkin/kursor/blob/main/screenshots/kurso.gif)
 
 <!-- Plugin description -->
-Kursor is a simple JetBrains IDEA plugin that helps you keep track of your keyboard language.
+Kursor is a simple JetBrains plugin that helps you keep track of your keyboard language.
 
 It shows the current language on the cursor and lets you change the cursor color based on the language.
 
