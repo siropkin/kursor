@@ -1,7 +1,7 @@
 <idea-plugin require-restart="true">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
@@ -11,10 +11,16 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        1.0.0 (2023-16-06)<br />
+        1.0.1 (2023-07-13)<br />
         ++++++++++++++++++<br />
         <br />
-        Initial release.
+        - Added Linux support.<br />
+        <br />
+        <br />
+        1.0.0 (2023-06-16)<br />
+        ++++++++++++++++++<br />
+        <br />
+        - Initial release.
     ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>

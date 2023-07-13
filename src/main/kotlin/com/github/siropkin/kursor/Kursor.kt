@@ -10,6 +10,7 @@ import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.awt.event.KeyEvent
 import java.awt.im.InputContext
+import java.io.BufferedReader
 import java.util.*
 import javax.swing.JComponent
 
@@ -22,6 +23,8 @@ object Position {
 
 
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
+    private val os = System.getProperty("os.name").lowercase()
+
     init {
         editor.contentComponent.add(this)
         isVisible = true
@@ -56,8 +59,31 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     }
 
     private fun getLanguage(): String {
-        val context: InputContext = InputContext.getInstance()
-        return context.locale.toString().substring(0, 2)
+        var language: String? = null
+
+        if (os == "linux") {
+            // This is not the ideal solution because it involves executing a shell command to know the current keyboard layout which might affect the performance.
+            // But it is the only solution I found that works on Linux.
+            try {
+                val process = Runtime.getRuntime().exec("gsettings get org.gnome.desktop.input-sources mru-sources")
+                val output = process.inputStream.bufferedReader().use(BufferedReader::readText)
+                process.waitFor()
+                if (process.exitValue() == 0) {
+                    language = output.substringAfter("('xkb', '").substringBefore("')").substring(0, 2)
+                    // if the language is "us" then it is actually "en"
+                    if (language == "us") {
+                        language = "en"
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        } else {
+            val context: InputContext = InputContext.getInstance()
+            language = context.locale.toString().substring(0, 2)
+        }
+
+        return language ?: "un"
     }
 
     private fun isCapsLockOn(): Boolean {
