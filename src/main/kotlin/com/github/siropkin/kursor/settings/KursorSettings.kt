@@ -23,7 +23,7 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
 
     var showIndicator: Boolean = true
     var indicateCapsLock: Boolean = true
-    var indicateDefaultLanguage: Boolean = true
+    var indicateDefaultLanguage: Boolean = false
 
     var indicatorFontName: String = EditorColorsManager.getInstance().globalScheme.editorFontName
     var indicatorFontStyle: Int = Font.PLAIN
