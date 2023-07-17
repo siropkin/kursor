@@ -5,7 +5,7 @@
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
-        Kursor is a simple JetBrains plugin that helps you keep track of your keyboard language.<br />
+        Kursor is a simple IntelliJ plugin that helps you keep track of your keyboard language.<br />
         It shows the current language on the cursor and lets you change the cursor color based on the language.<br />
         It's useful for developers who work with multiple languages and want to avoid typing errors.
     ]]></description>

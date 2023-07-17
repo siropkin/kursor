@@ -2,7 +2,7 @@
     <img src="./src/main/resources/META-INF/pluginIcon_dark.svg" width="220" height="220" alt="logo"/>
 </div>
 <h1 align="center">Kursor</h1>
-<p align="center">JetBrains IDEA plugin for tracking keyboard language</p>
+<p align="center">IntelliJ plugin for tracking keyboard language</p>
 
 <p align="center">
     <a href="https://plugins.jetbrains.com/plugin/22072-kursor"><img src="https://img.shields.io/jetbrains/plugin/r/stars/22072?style=flat-square"></a>
@@ -13,7 +13,7 @@
 ![](https://github.com/siropkin/kursor/blob/main/screenshots/kurso.gif)
 
 <!-- Plugin description -->
-Kursor is a simple JetBrains plugin that helps you keep track of your keyboard language.
+Kursor is a simple IntelliJ plugin that helps you keep track of your keyboard language.
 
 It shows the current language on the cursor and lets you change the cursor color based on the language.
 
