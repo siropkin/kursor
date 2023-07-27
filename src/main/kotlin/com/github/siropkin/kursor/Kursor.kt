@@ -10,7 +10,7 @@ import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.awt.event.KeyEvent
 import java.awt.im.InputContext
-import java.io.BufferedReader
+import java.io.*
 import java.util.*
 import javax.swing.JComponent
 
@@ -24,6 +24,8 @@ object Position {
 
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
     private val os = System.getProperty("os.name").lowercase()
+    private var linuxDistribution = System.getenv("DESKTOP_SESSION")?.lowercase() ?: ""
+    private var linuxKeyboardLayouts: List<String> = listOf()
 
     init {
         editor.contentComponent.add(this)
@@ -58,37 +60,79 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         return KursorSettings.getInstance()
     }
 
-    private fun getLanguage(): String {
-        var language: String? = null
-
-        if (os == "linux") {
-            // This is not the ideal solution because it involves executing a shell command to know the current keyboard layout which might affect the performance.
-            // But it is the only solution I found that works on Linux.
-            try {
-                val process = Runtime.getRuntime().exec("gsettings get org.gnome.desktop.input-sources mru-sources")
-                val output = process.inputStream.bufferedReader().use(BufferedReader::readText)
-                process.waitFor()
-                if (process.exitValue() == 0) {
-                    language = output.substringAfter("('xkb', '").substringBefore("')").substring(0, 2)
-                    // if the language is "us" then it is actually "en"
-                    if (language == "us") {
-                        language = "en"
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        } else {
-            val context: InputContext = InputContext.getInstance()
-            language = context.locale.toString().substring(0, 2)
+    private fun executeNativeCommand(command: String): String {
+        return try {
+            val process = Runtime.getRuntime().exec(command)
+            process.waitFor()
+            process.inputStream.bufferedReader().use(BufferedReader::readText)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ""
         }
+    }
 
-        return language ?: "un"
+    private fun getUbuntuKeyboardLayout(): String {
+        val commandOutput = executeNativeCommand("gsettings get org.gnome.desktop.input-sources mru-sources")
+        return commandOutput
+            .substringAfter("('xkb', '")
+            .substringBefore("')")
+            .substring(0, 2)
+    }
+
+    private fun getNonUbuntuKeyboardLayouts(): List<String> {
+        if (linuxKeyboardLayouts.isNotEmpty()) {
+            return linuxKeyboardLayouts
+        }
+        linuxKeyboardLayouts = executeNativeCommand("setxkbmap -query")
+            .substringAfter("layout:")
+            .substringBefore("\n")
+            .trim()
+            .split(",")
+        return linuxKeyboardLayouts
+    }
+
+    private fun getNonUbuntuKeyboardLayoutIndex(): Int {
+        return executeNativeCommand("xset -q")
+            .substringAfter("LED mask:")
+            .substringBefore("\n")
+            .trim()
+            .substring(4, 5)
+            .toInt(16)
+    }
+
+    private fun getNonUbuntuKeyboardLayout(): String {
+        val linuxKeyboardLayouts = getNonUbuntuKeyboardLayouts()
+        val linuxCurrentKeyboardLayoutIndex = getNonUbuntuKeyboardLayoutIndex()
+        return linuxKeyboardLayouts[linuxCurrentKeyboardLayoutIndex]
+    }
+
+    private fun getKeyboardLayout(): String {
+        // This is not the ideal solution because it involves executing a shell command to know the current keyboard layout
+        // which might affect the performance. And we have different commands for different Linux distributions.
+        // But it is the only solution I found that works on Linux.
+        var language = when (os) {
+            "linux" -> when (linuxDistribution) {
+                "ubuntu" -> getUbuntuKeyboardLayout()
+                else -> getNonUbuntuKeyboardLayout()
+            }
+            else -> InputContext.getInstance()
+                .locale
+                .toString()
+                .substring(0, 2)
+        }
+        if (language == "us") {
+            language = "en"
+        }
+        if (language.isEmpty()) {
+            language = getSettings().defaultLanguage
+        }
+        return language
     }
 
     private fun isCapsLockOn(): Boolean {
-        val toolkit = Toolkit.getDefaultToolkit()
-        return toolkit.getLockingKeyState(KeyEvent.VK_CAPS_LOCK)
+        return Toolkit
+            .getDefaultToolkit()
+            .getLockingKeyState(KeyEvent.VK_CAPS_LOCK)
     }
 
     private fun isOverwriteModeOn(): Boolean {
@@ -155,11 +199,11 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         }
 
         val settings = getSettings()
-        val language = getLanguage()
+        val keyboardLayout = getKeyboardLayout()
         val isCapsLockOn = isCapsLockOn()
 
         val caret = getPrimaryCaret()
-        val caretColor = if (settings.changeColorOnNonDefaultLanguage && language != settings.defaultLanguage) {
+        val caretColor = if (settings.changeColorOnNonDefaultLanguage && keyboardLayout != settings.defaultLanguage) {
             settings.colorOnNonDefaultLanguage
         } else {
             null
@@ -168,12 +212,12 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             setCaretColor(caret, caretColor)
         }
 
-        val isIndicatorVisible = settings.showIndicator && (settings.indicateDefaultLanguage || language != settings.defaultLanguage || settings.indicateCapsLock && isCapsLockOn)
+        val isIndicatorVisible = settings.showIndicator && (settings.indicateDefaultLanguage || keyboardLayout != settings.defaultLanguage || settings.indicateCapsLock && isCapsLockOn)
         if (!isIndicatorVisible) {
             return
         }
 
-        val indicatorText = if (settings.indicateCapsLock && isCapsLockOn) language.uppercase(Locale.getDefault()) else language
+        val indicatorText = if (settings.indicateCapsLock && isCapsLockOn) keyboardLayout.uppercase(Locale.getDefault()) else keyboardLayout
 
         val caretWidth = getCaretWidth(caret)
         val caretHeight = getCaretHeight(caret)

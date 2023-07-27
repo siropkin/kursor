@@ -1,7 +1,7 @@
 <idea-plugin require-restart="true">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
@@ -11,6 +11,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        1.0.3 (2023-07-28)<br />
+        ++++++++++++++++++<br />
+        - Improve Linux support<br />
+        <br />
+        <br />
         1.0.2 (2023-07-27)<br />
         ++++++++++++++++++<br />
         - Update `pluginUntilBuild` to include `232.*` (2023.2.*)<br />
