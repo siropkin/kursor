@@ -3,6 +3,11 @@
 ## [Unreleased]
 
 
+## [1.0.4] - 2023-10-25
+### Changed
+- Improve MacOS support
+
+
 ## [1.0.3] - 2023-07-28
 ### Changed
 - Improve Linux support

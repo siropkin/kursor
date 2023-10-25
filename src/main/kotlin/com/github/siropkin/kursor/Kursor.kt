@@ -71,7 +71,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         }
     }
 
-    private fun getUbuntuKeyboardLayout(): String {
+    private fun getLinuxUbuntuKeyboardLayout(): String {
         val commandOutput = executeNativeCommand("gsettings get org.gnome.desktop.input-sources mru-sources")
         return commandOutput
             .substringAfter("('xkb', '")
@@ -79,7 +79,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             .substring(0, 2)
     }
 
-    private fun getNonUbuntuKeyboardLayouts(): List<String> {
+    private fun getLinuxNonUbuntuKeyboardLayouts(): List<String> {
         if (linuxKeyboardLayouts.isNotEmpty()) {
             return linuxKeyboardLayouts
         }
@@ -91,7 +91,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         return linuxKeyboardLayouts
     }
 
-    private fun getNonUbuntuKeyboardLayoutIndex(): Int {
+    private fun getLinuxNonUbuntuKeyboardLayoutIndex(): Int {
         return executeNativeCommand("xset -q")
             .substringAfter("LED mask:")
             .substringBefore("\n")
@@ -100,10 +100,20 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             .toInt(16)
     }
 
-    private fun getNonUbuntuKeyboardLayout(): String {
-        val linuxKeyboardLayouts = getNonUbuntuKeyboardLayouts()
-        val linuxCurrentKeyboardLayoutIndex = getNonUbuntuKeyboardLayoutIndex()
+    private fun getLinuxNonUbuntuKeyboardLayout(): String {
+        val linuxKeyboardLayouts = getLinuxNonUbuntuKeyboardLayouts()
+        val linuxCurrentKeyboardLayoutIndex = getLinuxNonUbuntuKeyboardLayoutIndex()
         return linuxKeyboardLayouts[linuxCurrentKeyboardLayoutIndex]
+    }
+
+    private fun getOtherOsKeyboardLayout(): String {
+        // if locale in format _US_UserDefined_252 then we need to take the first two letters without _ symbol
+        // otherwise we are expecting the locale in format en_US and taking the first two letters
+        val locale = InputContext.getInstance().locale.toString()
+        if (locale.startsWith("_")) {
+            return locale.substring(1, 3)
+        }
+        return locale.substring(0, 2)
     }
 
     private fun getKeyboardLayout(): String {
@@ -112,14 +122,11 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         // But it is the only solution I found that works on Linux.
         var language = when (os) {
             "linux" -> when (linuxDistribution) {
-                "ubuntu" -> getUbuntuKeyboardLayout()
-                else -> getNonUbuntuKeyboardLayout()
+                "ubuntu" -> getLinuxUbuntuKeyboardLayout()
+                else -> getLinuxNonUbuntuKeyboardLayout()
             }
-            else -> InputContext.getInstance()
-                .locale
-                .toString()
-                .substring(0, 2)
-        }
+            else -> getOtherOsKeyboardLayout()
+        }.lowercase()
         if (language == "us") {
             language = "en"
         }

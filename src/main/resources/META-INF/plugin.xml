@@ -11,6 +11,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        1.0.4 (2023-10-25)<br />
+        ++++++++++++++++++<br />
+        - Improve MacOS support<br />
+        <br />
+        <br />
         1.0.3 (2023-07-28)<br />
         ++++++++++++++++++<br />
         - Improve Linux support<br />
