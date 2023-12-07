@@ -3,6 +3,11 @@
 ## [Unreleased]
 
 
+## [1.0.5] - 2023-12-07
+### Changed
+- Unspecify `pluginUntilBuild` (include all future builds)
+
+
 ## [1.0.4] - 2023-10-25
 ### Changed
 - Improve MacOS support
