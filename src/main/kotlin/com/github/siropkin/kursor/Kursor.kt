@@ -191,7 +191,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
     }
 
     private fun setCaretColor(caret: Caret, color: Color?) {
-        caret.visualAttributes = CaretVisualAttributes(color, CaretVisualAttributes.DEFAULT.weight)
+        caret.visualAttributes = CaretVisualAttributes(color, caret.visualAttributes.weight)
     }
 
     private fun colorWithAlpha(color: Color, alpha: Int): Color {
