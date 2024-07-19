@@ -29,6 +29,7 @@ class KursorSettingsConfigurable: Configurable {
                     || it.showIndicator != settings.showIndicator
                     || it.indicateCapsLock != settings.indicateCapsLock
                     || it.indicateDefaultLanguage != settings.indicateDefaultLanguage
+                    || it.useKeyboardLayout != settings.useKeyboardLayout
                     || it.indicatorFontName != settings.indicatorFontName
                     || it.indicatorFontStyle != settings.indicatorFontStyle
                     || it.indicatorFontSize != settings.indicatorFontSize
@@ -47,6 +48,7 @@ class KursorSettingsConfigurable: Configurable {
         settings.showIndicator = settingsComponent!!.showIndicator
         settings.indicateCapsLock = settingsComponent!!.indicateCapsLock
         settings.indicateDefaultLanguage = settingsComponent!!.indicateDefaultLanguage
+        settings.useKeyboardLayout = settingsComponent!!.useKeyboardLayout
         settings.indicatorFontName = settingsComponent!!.indicatorFontName
         settings.indicatorFontStyle = settingsComponent!!.indicatorFontStyle
         settings.indicatorFontSize = settingsComponent!!.indicatorFontSize
@@ -64,6 +66,7 @@ class KursorSettingsConfigurable: Configurable {
             it.showIndicator = settings.showIndicator
             it.indicateCapsLock = settings.indicateCapsLock
             it.indicateDefaultLanguage = settings.indicateDefaultLanguage
+            it.useKeyboardLayout = settings.useKeyboardLayout
             it.indicatorFontName = settings.indicatorFontName
             it.indicatorFontStyle = settings.indicatorFontStyle
             it.indicatorFontSize = settings.indicatorFontSize

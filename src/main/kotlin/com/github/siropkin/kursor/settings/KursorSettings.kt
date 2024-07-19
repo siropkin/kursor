@@ -1,6 +1,6 @@
 package com.github.siropkin.kursor.settings
 
-import com.github.siropkin.kursor.Position
+import com.github.siropkin.kursor.IndicatorPosition
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -22,15 +22,17 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
     var colorOnNonDefaultLanguage: Color = Color(255, 140, 0)
 
     var showIndicator: Boolean = true
+
     var indicateCapsLock: Boolean = true
     var indicateDefaultLanguage: Boolean = false
+    var useKeyboardLayout: Boolean = false
 
     var indicatorFontName: String = EditorColorsManager.getInstance().globalScheme.editorFontName
     var indicatorFontStyle: Int = Font.PLAIN
     var indicatorFontSize: Int = 11
     var indicatorFontAlpha: Int = 180
 
-    var indicatorVerticalPosition: String = Position.TOP
+    var indicatorVerticalPosition: String = IndicatorPosition.TOP
     var indicatorHorizontalOffset: Int = 4
 
     override fun getState(): KursorSettings {

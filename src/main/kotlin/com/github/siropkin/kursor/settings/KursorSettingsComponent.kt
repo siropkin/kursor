@@ -1,41 +1,35 @@
 package com.github.siropkin.kursor.settings
 
-import com.github.siropkin.kursor.Position
+import com.github.siropkin.kursor.IndicatorPosition
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
+import com.intellij.openapi.ui.ComboBox
 import java.awt.*
-import java.util.*
 import javax.swing.*
-
 
 private const val LABEL_SPACING = 10
 private const val COMPONENT_SPACING = 35
 
 class KursorSettingsComponent {
-    private val availableLanguages = Locale.getAvailableLocales()
-        .map { it.language }
-        .distinct()
-        .filter { it.isNotEmpty() }
-        .sorted()
-        .toTypedArray()
-    private val defaultLanguageComponent = JComboBox(availableLanguages)
+    private val defaultLanguageComponent = JBTextField("", 10)
 
     private val changeColorOnNonDefaultLanguageComponent = JBCheckBox("Change color on non-default language")
     private val colorOnNonDefaultLanguageComponent = ColorPanel()
 
     private val showIndicatorComponent = JBCheckBox("Show text indicator")
-    private val indicateCapsLockComponent = JBCheckBox("Indicate Caps Lock")
+    private val indicateCapsLockComponent = JBCheckBox("Indicate 'Caps Lock'")
     private val indicateDefaultLanguageComponent = JBCheckBox("Show default language")
+    private val useKeyboardLayoutComponent = JBCheckBox("Use keyboard layout")
 
-    private val indicatorFontNameComponent = JComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames)
-    private val indicatorFontStyleComponent = JComboBox(arrayOf(Font.PLAIN.toString(), Font.BOLD.toString(), Font.ITALIC.toString()))
+    private val indicatorFontNameComponent = ComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames)
+    private val indicatorFontStyleComponent = ComboBox(arrayOf(Font.PLAIN.toString(), Font.BOLD.toString(), Font.ITALIC.toString()))
     private val indicatorFontSizeComponent = JBTextField()
     private val indicatorFontAlphaComponent = JBTextField()
 
-    private val indicatorVerticalPositionComponent = JComboBox(arrayOf(Position.TOP, Position.MIDDLE, Position.BOTTOM))
+    private val indicatorVerticalPositionComponent = ComboBox(arrayOf(IndicatorPosition.TOP, IndicatorPosition.MIDDLE, IndicatorPosition.BOTTOM))
     private val indicatorHorizontalOffsetComponent = JBTextField()
 
     var panel: JPanel = FormBuilder.createFormBuilder()
@@ -50,9 +44,9 @@ class KursorSettingsComponent {
         get() = defaultLanguageComponent
 
     var defaultLanguage: String
-        get() = defaultLanguageComponent.selectedItem as String
+        get() = defaultLanguageComponent.text
         set(value) {
-            defaultLanguageComponent.selectedItem = value
+            defaultLanguageComponent.text = value
         }
 
     var changeColorOnNonDefaultLanguage: Boolean
@@ -85,6 +79,12 @@ class KursorSettingsComponent {
         get() = indicateDefaultLanguageComponent.isSelected
         set(value) {
             indicateDefaultLanguageComponent.isSelected = value
+        }
+
+    var useKeyboardLayout: Boolean
+        get() = useKeyboardLayoutComponent.isSelected
+        set(value) {
+            useKeyboardLayoutComponent.isSelected = value
         }
 
     var indicatorFontName: String
@@ -156,6 +156,7 @@ class KursorSettingsComponent {
         checkBoxPanel.layout = GridBagLayout()
         checkBoxPanel.add(showIndicatorComponent, createRbc(0, 0, 0.0))
         checkBoxPanel.add(indicateDefaultLanguageComponent, createRbc(1, 0, 0.0, COMPONENT_SPACING))
+        checkBoxPanel.add(useKeyboardLayoutComponent, createRbc(2, 0, 0.0, COMPONENT_SPACING))
         checkBoxPanel.add(indicateCapsLockComponent, createRbc(2, 0, 1.0, COMPONENT_SPACING))
 
         val fontPanel = JPanel()
@@ -169,6 +170,7 @@ class KursorSettingsComponent {
 
         showIndicatorComponent.addChangeListener {
             indicateDefaultLanguageComponent.isEnabled = showIndicator
+            useKeyboardLayoutComponent.isEnabled = showIndicator
             indicateCapsLockComponent.isEnabled = showIndicator
             indicatorFontNameComponent.isEnabled = showIndicator
             indicatorFontStyleComponent.isEnabled = showIndicator

@@ -11,21 +11,26 @@ import java.awt.event.ComponentListener
 import java.awt.event.KeyEvent
 import java.awt.im.InputContext
 import java.io.*
-import java.util.*
 import javax.swing.JComponent
 
+const val unknownCountry = "unk"
 
-object Position {
+object IndicatorPosition {
     const val TOP = "top"
     const val MIDDLE = "middle"
     const val BOTTOM = "bottom"
 }
 
+interface KeyboardLocale {
+    val language: String
+    val country: String
+    fun getIndicatorText(useLayout: Boolean): String = if (useLayout) country.lowercase() else language.lowercase()
+}
 
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
     private val os = System.getProperty("os.name").lowercase()
     private var linuxDistribution = System.getenv("DESKTOP_SESSION")?.lowercase() ?: ""
-    private var linuxKeyboardLayouts: List<String> = listOf()
+    private var linuxNonUbuntuKeyboardCountries: List<String> = emptyList()
 
     init {
         editor.contentComponent.add(this)
@@ -35,24 +40,18 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         editor.component.addComponentListener(this)
     }
 
-    override fun componentResized(e: ComponentEvent?) {
-        bounds = getEditorBounds()
-        repaint()
-    }
+    override fun componentShown(e: ComponentEvent?) {}
 
-    override fun componentMoved(e: ComponentEvent?) {
-        bounds = getEditorBounds()
-        repaint()
-    }
+    override fun componentHidden(e: ComponentEvent?) {}
 
-    override fun componentShown(e: ComponentEvent?) {
-    }
+    override fun componentResized(e: ComponentEvent?) = repaintComponent()
 
-    override fun componentHidden(e: ComponentEvent?) {
-    }
+    override fun componentMoved(e: ComponentEvent?) = repaintComponent()
 
-    override fun caretPositionChanged(e: CaretEvent) {
-        bounds = getEditorBounds()
+    override fun caretPositionChanged(e: CaretEvent) = repaintComponent()
+
+    private fun repaintComponent() {
+        bounds = editor.scrollingModel.visibleArea
         repaint()
     }
 
@@ -60,7 +59,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         return KursorSettings.getInstance()
     }
 
-    private fun executeNativeCommand(command: String): String {
+    private fun executeNativeCommand(command: Array<String>): String {
         return try {
             val process = Runtime.getRuntime().exec(command)
             process.waitFor()
@@ -71,69 +70,83 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         }
     }
 
-    private fun getLinuxUbuntuKeyboardLayout(): String {
-        val commandOutput = executeNativeCommand("gsettings get org.gnome.desktop.input-sources mru-sources")
-        return commandOutput
-            .substringAfter("('xkb', '")
-            .substringBefore("')")
-            .substring(0, 2)
-    }
-
-    private fun getLinuxNonUbuntuKeyboardLayouts(): List<String> {
-        if (linuxKeyboardLayouts.isNotEmpty()) {
-            return linuxKeyboardLayouts
+    private fun getLinuxKeyboardLocale(): KeyboardLocale {
+        if (linuxDistribution == "ubuntu") {
+            val country = executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
+                .substringAfter("('xkb', '")
+                .substringBefore("')")
+                .substring(0, 2)
+            return object : KeyboardLocale {
+                override val language: String = country
+                override val country: String = country
+            }
         }
-        linuxKeyboardLayouts = executeNativeCommand("setxkbmap -query")
-            .substringAfter("layout:")
-            .substringBefore("\n")
-            .trim()
-            .split(",")
-        return linuxKeyboardLayouts
-    }
 
-    private fun getLinuxNonUbuntuKeyboardLayoutIndex(): Int {
-        return executeNativeCommand("xset -q")
+        // For non Ubuntu OS we know only keyboard layout and do not know keyboard language
+        if (linuxNonUbuntuKeyboardCountries.isEmpty()) {
+            linuxNonUbuntuKeyboardCountries = executeNativeCommand(arrayOf("setxkbmap", "-query"))
+                .substringAfter("layout:")
+                .substringBefore("\n")
+                .trim()
+                .split(",")
+        }
+
+        // This is a bad solution because it returns 0 if it's a default layout and 1 in other cases,
+        // and if user has more than two layouts, we do not know which one is really on
+        val linuxCurrentKeyboardCountryIndex = executeNativeCommand(arrayOf("xset", "-q"))
             .substringAfter("LED mask:")
             .substringBefore("\n")
             .trim()
             .substring(4, 5)
             .toInt(16)
+        val country = if (linuxNonUbuntuKeyboardCountries.size > 2 && linuxCurrentKeyboardCountryIndex > 0) unknownCountry else linuxNonUbuntuKeyboardCountries[linuxCurrentKeyboardCountryIndex]
+        return object : KeyboardLocale {
+            override val language: String = country
+            override val country: String = country
+        }
     }
 
-    private fun getLinuxNonUbuntuKeyboardLayout(): String {
-        val linuxKeyboardLayouts = getLinuxNonUbuntuKeyboardLayouts()
-        val linuxCurrentKeyboardLayoutIndex = getLinuxNonUbuntuKeyboardLayoutIndex()
-        return linuxKeyboardLayouts[linuxCurrentKeyboardLayoutIndex]
-    }
-
-    private fun getOtherOsKeyboardLayout(): String {
+    private fun getMacKeyboardLocale(): KeyboardLocale {
         // if locale in format _US_UserDefined_252 then we need to take the first two letters without _ symbol
         // otherwise we are expecting the locale in format en_US and taking the first two letters
         val locale = InputContext.getInstance().locale.toString()
-        if (locale.startsWith("_")) {
-            return locale.substring(1, 3)
+        val language = if (locale.startsWith("_")) {
+            locale.substring(1, 3)
+        } else {
+            locale.substring(0, 2)
         }
-        return locale.substring(0, 2)
+        val layout = if (locale.startsWith("_")) {
+            ""
+        } else {
+            locale.substring(3, 5)
+        }
+        return object : KeyboardLocale {
+            override val language: String = language
+            override val country: String = layout
+        }
     }
 
-    private fun getKeyboardLayout(): String {
+    private fun getWindowsKeyboardLocale(): KeyboardLocale {
+        val locale = InputContext.getInstance().locale
+        return object : KeyboardLocale {
+            override val language: String = locale.language
+            override val country: String = locale.country
+        }
+    }
+
+    private fun getKeyboardLocale(): KeyboardLocale {
         // This is not the ideal solution because it involves executing a shell command to know the current keyboard layout
         // which might affect the performance. And we have different commands for different Linux distributions.
         // But it is the only solution I found that works on Linux.
-        var language = when (os) {
-            "linux" -> when (linuxDistribution) {
-                "ubuntu" -> getLinuxUbuntuKeyboardLayout()
-                else -> getLinuxNonUbuntuKeyboardLayout()
+        return if (os == "linux") {
+            getLinuxKeyboardLocale()
+        } else {
+            if (os.startsWith("win")) {
+                getWindowsKeyboardLocale()
+            } else {
+                getMacKeyboardLocale()
             }
-            else -> getOtherOsKeyboardLayout()
-        }.lowercase()
-        if (language == "us") {
-            language = "en"
         }
-        if (language.isEmpty()) {
-            language = getSettings().defaultLanguage
-        }
-        return language
     }
 
     private fun isCapsLockOn(): Boolean {
@@ -152,10 +165,6 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
     private fun isEditorFocused(): Boolean {
         return editor.contentComponent.isFocusOwner
-    }
-
-    private fun getEditorBounds(): Rectangle {
-        return editor.scrollingModel.visibleArea
     }
 
     private fun getPrimaryCaret(): Caret {
@@ -206,25 +215,38 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         }
 
         val settings = getSettings()
-        val keyboardLayout = getKeyboardLayout()
-        val isCapsLockOn = isCapsLockOn()
+
+        val keyboardLocale = getKeyboardLocale()
+        val isCapsLock = settings.indicateCapsLock && isCapsLockOn()
+        var indicatorText = keyboardLocale.getIndicatorText(settings.useKeyboardLayout)
+        if (indicatorText.isEmpty()) {
+            indicatorText = settings.defaultLanguage
+        }
 
         val caret = getPrimaryCaret()
-        val caretColor = if (settings.changeColorOnNonDefaultLanguage && keyboardLayout != settings.defaultLanguage) {
-            settings.colorOnNonDefaultLanguage
-        } else {
-            null
+        var caretColor: Color? = null
+        if (settings.changeColorOnNonDefaultLanguage) {
+            if (indicatorText != settings.defaultLanguage) {
+                caretColor = settings.colorOnNonDefaultLanguage
+            }
         }
+
         if (caret.visualAttributes.color != caretColor) {
             setCaretColor(caret, caretColor)
         }
 
-        val isIndicatorVisible = settings.showIndicator && (settings.indicateDefaultLanguage || keyboardLayout != settings.defaultLanguage || settings.indicateCapsLock && isCapsLockOn)
-        if (!isIndicatorVisible) {
+        if (!settings.showIndicator) {
             return
         }
 
-        val indicatorText = if (settings.indicateCapsLock && isCapsLockOn) keyboardLayout.uppercase(Locale.getDefault()) else keyboardLayout
+        val showIndicator = settings.indicateDefaultLanguage || isCapsLock || indicatorText.lowercase() != settings.defaultLanguage.lowercase()
+        if (!showIndicator) {
+            return
+        }
+
+        if (isCapsLock) {
+            indicatorText = indicatorText.uppercase()
+        }
 
         val caretWidth = getCaretWidth(caret)
         val caretHeight = getCaretHeight(caret)
@@ -232,9 +254,9 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
         val indicatorOffsetX = caretWidth + settings.indicatorHorizontalOffset
         val indicatorOffsetY = when (settings.indicatorVerticalPosition) {
-            Position.TOP -> (if (caret.visualPosition.line == 0) settings.indicatorFontSize else settings.indicatorFontSize / 2) - 1
-            Position.MIDDLE -> caretHeight / 2 + settings.indicatorFontSize / 2 - 1
-            Position.BOTTOM -> caretHeight + 3
+            IndicatorPosition.TOP -> (if (caret.visualPosition.line == 0) settings.indicatorFontSize else settings.indicatorFontSize / 2) - 1
+            IndicatorPosition.MIDDLE -> caretHeight / 2 + settings.indicatorFontSize / 2 - 1
+            IndicatorPosition.BOTTOM -> caretHeight + 3
             else -> 0
         }
 
