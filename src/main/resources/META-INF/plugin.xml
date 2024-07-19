@@ -1,16 +1,22 @@
 <idea-plugin require-restart="true">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
-        Kursor is a simple IntelliJ plugin that helps you keep track of your keyboard language.<br />
-        It shows the current language on the cursor and lets you change the cursor color based on the language.<br />
-        It's useful for developers who work with multiple languages and want to avoid typing errors.
+        Kursor simplifies language tracking directly on your IntelliJ IDE.<br />
+        It dynamically displays the current keyboard language on your cursor, offering the added functionality of changing the cursor's color to match the language in use.<br />
+        This feature is particularly beneficial for developers juggling multiple languages, significantly reducing the likelihood of typing errors.
     ]]></description>
 
     <change-notes><![CDATA[
+        1.1.0 (2024-07-19)<br />
+        ++++++++++++++++++<br />
+        - Add "Use Keyboard Layout" setting to determine the language based on the keyboard layout
+        - Update Gradle to 8.9
+        <br />
+        <br />
         1.0.5 (2023-12-07)<br />
         ++++++++++++++++++<br />
         - Unspecify `pluginUntilBuild` (include all future builds)<br />

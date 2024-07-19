@@ -14,7 +14,8 @@ private const val LABEL_SPACING = 10
 private const val COMPONENT_SPACING = 35
 
 class KursorSettingsComponent {
-    private val defaultLanguageComponent = JBTextField("", 10)
+    private val defaultLanguageComponent = JBTextField("", 5)
+    private val useKeyboardLayoutComponent = JBCheckBox("Use keyboard layout")
 
     private val changeColorOnNonDefaultLanguageComponent = JBCheckBox("Change color on non-default language")
     private val colorOnNonDefaultLanguageComponent = ColorPanel()
@@ -22,7 +23,6 @@ class KursorSettingsComponent {
     private val showIndicatorComponent = JBCheckBox("Show text indicator")
     private val indicateCapsLockComponent = JBCheckBox("Indicate 'Caps Lock'")
     private val indicateDefaultLanguageComponent = JBCheckBox("Show default language")
-    private val useKeyboardLayoutComponent = JBCheckBox("Use keyboard layout")
 
     private val indicatorFontNameComponent = ComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames)
     private val indicatorFontStyleComponent = ComboBox(arrayOf(Font.PLAIN.toString(), Font.BOLD.toString(), Font.ITALIC.toString()))
@@ -34,6 +34,7 @@ class KursorSettingsComponent {
 
     var panel: JPanel = FormBuilder.createFormBuilder()
         .addLabeledComponent("Default language:", defaultLanguageComponent, 1, false)
+        .addComponent(useKeyboardLayoutComponent)
         .addComponent(createColorPanel())
         .addComponent(createIndicatorPanel())
         .addComponent(createPositionPanel())
@@ -47,6 +48,12 @@ class KursorSettingsComponent {
         get() = defaultLanguageComponent.text
         set(value) {
             defaultLanguageComponent.text = value
+        }
+
+    var useKeyboardLayout: Boolean
+        get() = useKeyboardLayoutComponent.isSelected
+        set(value) {
+            useKeyboardLayoutComponent.isSelected = value
         }
 
     var changeColorOnNonDefaultLanguage: Boolean
@@ -79,12 +86,6 @@ class KursorSettingsComponent {
         get() = indicateDefaultLanguageComponent.isSelected
         set(value) {
             indicateDefaultLanguageComponent.isSelected = value
-        }
-
-    var useKeyboardLayout: Boolean
-        get() = useKeyboardLayoutComponent.isSelected
-        set(value) {
-            useKeyboardLayoutComponent.isSelected = value
         }
 
     var indicatorFontName: String
@@ -156,7 +157,6 @@ class KursorSettingsComponent {
         checkBoxPanel.layout = GridBagLayout()
         checkBoxPanel.add(showIndicatorComponent, createRbc(0, 0, 0.0))
         checkBoxPanel.add(indicateDefaultLanguageComponent, createRbc(1, 0, 0.0, COMPONENT_SPACING))
-        checkBoxPanel.add(useKeyboardLayoutComponent, createRbc(2, 0, 0.0, COMPONENT_SPACING))
         checkBoxPanel.add(indicateCapsLockComponent, createRbc(2, 0, 1.0, COMPONENT_SPACING))
 
         val fontPanel = JPanel()
