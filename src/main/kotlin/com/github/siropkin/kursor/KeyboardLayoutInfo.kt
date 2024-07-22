@@ -26,16 +26,20 @@ class KeyboardLayoutInfo {
     }
 
     private fun getLinuxKeyboardLayout(): KeyboardLayout {
+        // InputContext.getInstance().locale is not working on Linux: it always returns "en_US"
         // This is not the ideal solution because it involves executing a shell command to know the current keyboard layout
         // which might affect the performance. And we have different commands for different Linux distributions.
         // But it is the only solution I found that works on Linux.
         // For Linux we know only keyboard country and do not know keyboard language
         if (linuxDistribution == "ubuntu") {
-            val country = executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
+            // output example: [('xkb', 'us'), ('xkb', 'ru'), ('xkb', 'ca+eng')]
+            val split = executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
                 .substringAfter("('xkb', '")
                 .substringBefore("')")
-                .substring(0, 2)
-            return KeyboardLayout(country, unknownLanguage)
+                .split("+")
+            val country = split[0]
+            val language = if (split.size > 1) split[1] else unknownLanguage
+            return KeyboardLayout(country, language)
         }
 
         if (linuxNonUbuntuKeyboardCountries.isEmpty()) {
