@@ -88,6 +88,11 @@ class KeyboardLayoutInfo {
             .substring(4, 5)
             .toInt(16)
 
+        // Additional check to avoid out of bounds exception
+        if (linuxCurrentKeyboardCountryIndex >= linuxNonUbuntuKeyboardCountries.size) {
+            return KeyboardLayout(unknownCountry, unknownLanguage)
+        }
+
         // This is a bad solution because it returns 0 if it's a default layout and 1 in other cases,
         // and if user has more than two layouts, we do not know which one is really on
         if (linuxNonUbuntuKeyboardCountries.size > 2 && linuxCurrentKeyboardCountryIndex > 0) {
