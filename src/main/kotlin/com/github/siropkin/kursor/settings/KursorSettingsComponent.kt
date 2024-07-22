@@ -15,7 +15,6 @@ private const val COMPONENT_SPACING = 35
 
 class KursorSettingsComponent {
     private val defaultLanguageComponent = JBTextField("", 5)
-    private val useKeyboardLayoutComponent = JBCheckBox("Use keyboard layout")
 
     private val changeColorOnNonDefaultLanguageComponent = JBCheckBox("Change color on non-default language")
     private val colorOnNonDefaultLanguageComponent = ColorPanel()
@@ -34,7 +33,6 @@ class KursorSettingsComponent {
 
     var panel: JPanel = FormBuilder.createFormBuilder()
         .addLabeledComponent("Default language:", defaultLanguageComponent, 1, false)
-        .addComponent(useKeyboardLayoutComponent)
         .addComponent(createColorPanel())
         .addComponent(createIndicatorPanel())
         .addComponent(createPositionPanel())
@@ -47,13 +45,7 @@ class KursorSettingsComponent {
     var defaultLanguage: String
         get() = defaultLanguageComponent.text
         set(value) {
-            defaultLanguageComponent.text = value
-        }
-
-    var useKeyboardLayout: Boolean
-        get() = useKeyboardLayoutComponent.isSelected
-        set(value) {
-            useKeyboardLayoutComponent.isSelected = value
+            defaultLanguageComponent.text = value.lowercase()
         }
 
     var changeColorOnNonDefaultLanguage: Boolean
@@ -170,7 +162,6 @@ class KursorSettingsComponent {
 
         showIndicatorComponent.addChangeListener {
             indicateDefaultLanguageComponent.isEnabled = showIndicator
-            useKeyboardLayoutComponent.isEnabled = showIndicator
             indicateCapsLockComponent.isEnabled = showIndicator
             indicatorFontNameComponent.isEnabled = showIndicator
             indicatorFontStyleComponent.isEnabled = showIndicator

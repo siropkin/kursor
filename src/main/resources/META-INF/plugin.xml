@@ -13,8 +13,12 @@
     <change-notes><![CDATA[
         1.1.0 (2024-07-19)<br />
         ++++++++++++++++++<br />
-        - Add "Use Keyboard Layout" setting to determine the language based on the keyboard layout
-        - Update Gradle to 8.9
+        Changed:<br />
+        - Improved keyboard layout detection across different operating systems, ensuring more accurate language tracking.<br />
+        - Transitioned the "Default Language" setting from a ComboBox component to an Input component, allowing for custom default language input and enhancing flexibility beyond pre-filled options.<br />
+        <br />
+        For Contributors and Developers:<br />
+        - Updated Gradle to version 8.9 to align with the latest development practices and ensure compatibility.<br />
         <br />
         <br />
         1.0.5 (2023-12-07)<br />
