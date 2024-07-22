@@ -6,6 +6,7 @@
 ### Changed
 - Improved keyboard layout detection across different operating systems, ensuring more accurate language tracking.
 - Transitioned the "Default Language" setting from a ComboBox component to an Input component, allowing for custom default language input and enhancing flexibility beyond pre-filled options.
+- Added "Detect Keyboard Layout" button to the settings page, enabling users to manually detect their keyboard layout and update the default language accordingly.
 
 ### For Contributors and Developers
 - Updated Gradle to version 8.9 to align with the latest development practices and ensure compatibility.

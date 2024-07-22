@@ -1,6 +1,7 @@
 package com.github.siropkin.kursor.settings
 
 import com.github.siropkin.kursor.IndicatorPosition
+import com.github.siropkin.kursor.KeyboardLayoutInfo
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
@@ -14,7 +15,10 @@ private const val LABEL_SPACING = 10
 private const val COMPONENT_SPACING = 35
 
 class KursorSettingsComponent {
+    private val keyboardLayoutInfo = KeyboardLayoutInfo()
+
     private val defaultLanguageComponent = JBTextField("", 5)
+    private val detectKeyboardLayoutButton = JButton("Detect Keyboard Layout")
 
     private val changeColorOnNonDefaultLanguageComponent = JBCheckBox("Change color on non-default language")
     private val colorOnNonDefaultLanguageComponent = ColorPanel()
@@ -32,7 +36,7 @@ class KursorSettingsComponent {
     private val indicatorHorizontalOffsetComponent = JBTextField()
 
     var panel: JPanel = FormBuilder.createFormBuilder()
-        .addLabeledComponent("Default language:", defaultLanguageComponent, 1, false)
+        .addComponent(createLanguagePanel())
         .addComponent(createColorPanel())
         .addComponent(createIndicatorPanel())
         .addComponent(createPositionPanel())
@@ -130,6 +134,20 @@ class KursorSettingsComponent {
                 // indicatorHorizontalOffsetComponent.text = ""
             }
         }
+
+    private fun createLanguagePanel(): JPanel {
+        val languagePanel = JPanel()
+        languagePanel.layout = GridBagLayout()
+        languagePanel.add(JBLabel("Default language:"), createRbc(0, 0, 0.0))
+        languagePanel.add(defaultLanguageComponent, createRbc(1, 0, 0.0, LABEL_SPACING))
+        languagePanel.add(detectKeyboardLayoutButton, createRbc(2, 0, 1.0, COMPONENT_SPACING))
+
+        detectKeyboardLayoutButton.addActionListener {
+            defaultLanguageComponent.text = keyboardLayoutInfo.getLayout().toString()
+        }
+
+        return languagePanel
+    }
 
     private fun createColorPanel(): JPanel {
         val colorPanel = JPanel()
