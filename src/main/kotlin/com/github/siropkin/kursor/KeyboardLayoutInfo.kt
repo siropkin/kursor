@@ -14,6 +14,7 @@ class KeyboardLayoutInfo {
 
     private val os: String = System.getProperty("os.name").lowercase()
     private var linuxDistribution: String = System.getenv("DESKTOP_SESSION")?.lowercase() ?: ""
+    private var linuxDesktopGroup: String = System.getenv("XDG_SESSION_TYPE")?.lowercase() ?: ""
     private var linuxNonUbuntuKeyboardCountries: List<String> = emptyList()
 
     fun getLayout(): KeyboardLayout {
@@ -47,11 +48,20 @@ class KeyboardLayoutInfo {
             //model:      pc105
             //layout:     us
             //options:    grp:win_space_toggle,terminate:ctrl_alt_bksp
-            linuxNonUbuntuKeyboardCountries = executeNativeCommand(arrayOf("setxkbmap", "-query"))
-                .substringAfter("layout:")
-                .substringBefore("\n")
-                .trim()
-                .split(",")
+            // FIXME: This command does not work on linuxDesktopGroup = "wayland", see: https://github.com/siropkin/kursor/issues/3
+            linuxNonUbuntuKeyboardCountries = if (linuxDesktopGroup == "wayland") {
+                executeNativeCommand(arrayOf("setxkbmap", "-query"))
+                    .substringAfter("layout:")
+                    .substringBefore("\n")
+                    .trim()
+                    .split(",")
+            } else {
+                executeNativeCommand(arrayOf("setxkbmap", "-query"))
+                    .substringAfter("layout:")
+                    .substringBefore("\n")
+                    .trim()
+                    .split(",")
+            }
         }
 
         // output example: Keyboard Control:
