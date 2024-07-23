@@ -16,7 +16,7 @@ import java.awt.Font
     storages = [Storage("Kursor.xml")]
 )
 class KursorSettings : PersistentStateComponent<KursorSettings> {
-    var defaultLanguage: String = "en"
+    var defaultLanguage: String = "us"
 
     var changeColorOnNonDefaultLanguage: Boolean = true
     var colorOnNonDefaultLanguage: Color = Color(255, 140, 0)
@@ -25,7 +25,6 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
 
     var indicateCapsLock: Boolean = true
     var indicateDefaultLanguage: Boolean = false
-    var useKeyboardLayout: Boolean = false
 
     var indicatorFontName: String = EditorColorsManager.getInstance().globalScheme.editorFontName
     var indicatorFontStyle: Int = Font.PLAIN

@@ -7,7 +7,7 @@
 *IntelliJ plugin for tracking keyboard language*
 
 [![Rating](https://img.shields.io/jetbrains/plugin/r/stars/22072?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/embeddable/install/22072)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 [![Version](https://img.shields.io/jetbrains/plugin/v/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 
 ![Kursor Demo](./screenshots/demo.png)
@@ -35,7 +35,6 @@ Alternatively, you can install it directly inside your IDE:
 ![Settings Screenshot](./screenshots/settings.png)
 
 - **Default Language:** The default language for your IDE.
-- **Use Keyboard Layout:** Determines the language based on the keyboard layout.
 - **Change Color on Non-Default Language:** Changes the cursor color if the language is not the default.
 - **Show Text Indicator:** Displays a language indicator on the cursor. If disabled, only the cursor color will be changed.
 - **Show Default Language:** Shows the default language on the cursor when enabled.
@@ -45,6 +44,17 @@ Alternatively, you can install it directly inside your IDE:
 - **Opacity:** Opacity of the language indicator (0 - transparent, 255 - opaque).
 - **Vertical Position:** Vertical position of the language indicator (top, middle, or bottom).
 - **Horizontal Offset:** Horizontal offset of the language indicator.
+
+## Feedback and Suggestions
+
+I value your feedback and suggestions to improve Kursor. If you have any ideas, issues, or feature requests, please share them with me on GitHub. Your input helps me make Kursor better for everyone.
+
+To post your feedback or suggestions, visit our GitHub Issues page:
+
+[https://github.com/siropkin/kursor/issues](https://github.com/siropkin/kursor/issues)
+
+Thank you for supporting Kursor and helping me enhance your coding experience.
+
 
 ## Support
 
