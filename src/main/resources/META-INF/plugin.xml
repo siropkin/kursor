@@ -1,4 +1,4 @@
-<idea-plugin require-restart="true">
+<idea-plugin require-restart="false">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
     <version>1.1.0</version>
