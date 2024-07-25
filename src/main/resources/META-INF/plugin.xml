@@ -1,7 +1,7 @@
 <idea-plugin require-restart="false">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
@@ -11,6 +11,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        1.1.1 (2024-07-25)<br />
+        ++++++++++++++++++<br />
+        Changed:<br />
+        - Improved keyboard layout detection for Windows users, including detection of different input methods within the same language. Previously, Kursor would not detect different input methods within one language, but now it does.<br />
+        <br />
+        <br />
         1.1.0 (2024-07-19)<br />
         ++++++++++++++++++<br />
         Changed:<br />

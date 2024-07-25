@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2024-07-25
+### Changed
+- Improved keyboard layout detection for Windows users, including detection of different input methods within the same language. Previously, Kursor would not detect different input methods within one language, but now it does.
+
+
 ## [1.1.0] - 2024-07-19
 ### Changed
 - Improved keyboard layout detection across different operating systems, ensuring more accurate language tracking.
