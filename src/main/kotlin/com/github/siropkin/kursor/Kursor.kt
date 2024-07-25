@@ -119,7 +119,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         val keyboardLayout = keyboardLayoutInfo.getLayout()
         var keyboardLayoutString = keyboardLayout.toString()
         if (keyboardLayoutString.isEmpty()) {
-            keyboardLayoutString = settings.defaultLanguage
+            return
         }
 
         val caret = getPrimaryCaret()
