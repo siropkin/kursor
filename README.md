@@ -6,8 +6,6 @@
 
 *IntelliJ plugin for tracking keyboard language*
 
-[![Build](
-
 [![Rating](https://img.shields.io/jetbrains/plugin/r/stars/22072?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 [![Version](https://img.shields.io/jetbrains/plugin/v/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
@@ -40,7 +38,7 @@ This feature is particularly beneficial for developers juggling multiple languag
 - **For Mac:** `IntelliJ IDEA` > `Preferences` > `Plugins` > `Marketplace` > Search for "Kursor" > `Install Plugin` > Restart IntelliJ IDEA
 
 
-## How to Use
+## Usage
 Once installed, Kursor will automatically run when you open your project in IntelliJ IDEA.
 
 
@@ -81,7 +79,7 @@ Thank you for supporting Kursor and helping me enhance your coding experience.
 Kursor is open-source and available under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).
 
 
-# Support
+## Support
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ivan.seredkin)
 
 
