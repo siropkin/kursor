@@ -1,16 +1,23 @@
 <idea-plugin require-restart="false">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
+        Avoid typos and coding errors caused by language switching.<br />
         Kursor simplifies language tracking directly on your IntelliJ IDE.<br />
         It dynamically displays the current keyboard language on your cursor, offering the added functionality of changing the cursor's color to match the language in use.<br />
         This feature is particularly beneficial for developers juggling multiple languages, significantly reducing the likelihood of typing errors.
     ]]></description>
 
     <change-notes><![CDATA[
+        1.2.0 (unreleased)<br />
+        ++++++++++++++++++<br />
+        Changed:<br />
+        - Plugin settings moved to Tools: `File` > `Settings` > `Tools` > `Kursor`.<br />
+        <br />
+        <br />
         1.1.1 (2024-07-25)<br />
         ++++++++++++++++++<br />
         Changed:<br />
@@ -64,9 +71,12 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable parentId="appearance"
-                                 instance="com.github.siropkin.kursor.settings.KursorSettingsConfigurable"
-                                 id="org.intellij.sdk.settings.AppSettingsConfigurable" dynamic="true" displayName="Kursor"/>
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.github.siropkin.kursor.settings.KursorSettingsConfigurable"
+                id="com.github.siropkin.kursor.settings.KursorSettingsConfigurable"
+                displayName="Kursor"
+        />
         <applicationService serviceImplementation="com.github.siropkin.kursor.settings.KursorSettings"/>
         <postStartupActivity implementation="com.github.siropkin.kursor.KursorStartupActivity" />
     </extensions>
