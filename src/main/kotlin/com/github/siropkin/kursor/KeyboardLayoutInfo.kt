@@ -1,5 +1,6 @@
 package com.github.siropkin.kursor
 
+import com.sun.jna.Platform
 import com.sun.jna.platform.win32.User32
 import com.sun.jna.platform.win32.WinDef
 import com.sun.jna.platform.win32.WinDef.HKL
@@ -210,16 +211,15 @@ class KeyboardLayout(private val layout: String, private val country: String, pr
 }
 
 class KeyboardLayoutInfo {
-    private val os: String = System.getProperty("os.name").lowercase()
     private var linuxDistribution: String = System.getenv("DESKTOP_SESSION")?.lowercase() ?: ""
     private var linuxDesktopGroup: String = System.getenv("XDG_SESSION_TYPE")?.lowercase() ?: ""
     private var linuxNonUbuntuKeyboardLayouts: List<String> = emptyList()
 
     fun getLayout(): KeyboardLayout {
         return when {
-            os.startsWith("linux") -> getLinuxKeyboardLayout()
-            os.startsWith("win") -> getWindowsKeyboardLayout()
-            os.startsWith("mac") -> getMacKeyboardLayout()
+            Platform.isLinux() -> getLinuxKeyboardLayout()
+            Platform.isWindows() -> getWindowsKeyboardLayout()
+            Platform.isMac() -> getMacKeyboardLayout()
             else -> KeyboardLayout(unknown, unknown, unknown)
         }
     }
