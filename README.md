@@ -45,6 +45,14 @@ Alternatively, you can install it directly inside your IDE:
 - **Vertical Position:** Vertical position of the language indicator (top, middle, or bottom).
 - **Horizontal Offset:** Horizontal offset of the language indicator.
 
+## Supported Operating Systems
+
+Kursor supports the following operating systems:
+
+- **Windows**
+- **Mac**
+- **Linux**
+
 ## Feedback and Suggestions
 
 I value your feedback and suggestions to improve Kursor. If you have any ideas, issues, or feature requests, please share them with me on GitHub. Your input helps me make Kursor better for everyone.
