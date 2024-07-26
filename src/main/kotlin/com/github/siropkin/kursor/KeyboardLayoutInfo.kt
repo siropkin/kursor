@@ -78,7 +78,7 @@ private val windowsKeyboardLayoutMap = mapOf(
 )
 
 // https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
-val windowsKeyboardCountryCodeMap = mapOf(
+private val windowsKeyboardCountryCodeMap = mapOf(
     "0004" to "zh-CHS",
     "0401" to "ar-SA",
     "0402" to "bg-BG",
