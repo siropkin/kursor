@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="49" height="49" viewBox="0 0 1080 1080">
     <g transform="matrix(13.37 0 0 13.37 540 540)">
-        <path style="fill: rgb(0,0,0);" transform=" translate(-50, -50)" d="M 90.375 90.375 L 9.625 90.375 L 9.625 9.625 L 90.375 9.625 L 90.375 90.375 z M 11.625 88.375 L 88.375 88.375 L 88.375 11.625 L 11.625 11.625 L 11.625 88.375 z" />
+        <path style="fill: rgb(82,139,255);" transform=" translate(-50, -50)" d="M 90.375 90.375 L 9.625 90.375 L 9.625 9.625 L 90.375 9.625 L 90.375 90.375 z M 11.625 88.375 L 88.375 88.375 L 88.375 11.625 L 11.625 11.625 L 11.625 88.375 z" />
     </g>
     <g transform="matrix(1 0 0 17.21 368.65 740.49)">
-        <rect style="fill: rgb(0,0,0);" x="-37.4585" y="-19.4165" rx="0" ry="0" width="74.917" height="38.833" />
+        <rect style="fill: rgb(82,139,255);" x="-37.4585" y="-19.4165" rx="0" ry="0" width="74.917" height="38.833" />
     </g>
     <g transform="matrix(1 0 0 1 565.23 399.02)">
-        <text font-size="350" font-style="normal" font-weight="700" style="fill: rgb(0,0,0);" >
+        <text font-size="350" font-style="normal" font-weight="700" style="fill: rgb(82,139,255);" >
             <tspan x="-111.5" y="62.83">en</tspan>
         </text>
     </g>
