@@ -1,6 +1,6 @@
 <div align="center">
 
-![Kursor Logo](./src/main/resources/META-INF/pluginIcon_dark.svg)
+![Kursor Logo](readme/logo.svg)
 
 # Kursor
 
@@ -10,7 +10,8 @@
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 [![Version](https://img.shields.io/jetbrains/plugin/v/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 
-![Kursor Demo](./screenshots/demo.png)
+![Kursor Demo](readme/demo.png) 
+![Settings Screenshot](readme/settings.png)
 </div>
 
 <!-- Plugin description -->
@@ -49,8 +50,7 @@ You can customize Kursor's settings to suit your preferences:
 2. Adjust the settings to your liking.
 3. Click `Apply` to save the changes.
 
-![Settings Screenshot](./screenshots/settings.png)
-
+### Settings
 - **Default Language:** The default language for your IDE.
 - **Change Color on Non-Default Language:** Changes the cursor color if the language is not the default.
 - **Show Text Indicator:** Displays a language indicator on the cursor. If disabled, only the cursor color will be changed.
