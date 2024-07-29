@@ -12,10 +12,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        1.2.0 (unreleased)<br />
+        1.2.0 (2024-07-29)<br />
         ++++++++++++++++++<br />
         Changed:<br />
         - Plugin settings moved to Tools: `File` > `Settings` > `Tools` > `Kursor`.<br />
+        - Fix German keyboard layout abbreviation for Windows.<br />
         <br />
         <br />
         1.1.1 (2024-07-25)<br />

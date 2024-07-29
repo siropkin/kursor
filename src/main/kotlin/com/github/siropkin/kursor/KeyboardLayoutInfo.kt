@@ -17,7 +17,7 @@ private val windowsKeyboardLayoutMap = mapOf(
     "00000404" to "CH",
     "00000405" to "CZ",
     "00000406" to "DK",
-    "00000407" to "GR",
+    "00000407" to "DE",
     "00000408" to "GK",
     "00000409" to "US",
     "0000040A" to "SP",
@@ -58,7 +58,7 @@ private val windowsKeyboardLayoutMap = mapOf(
     "00001809" to "US",
     "00010402" to "US",
     "00010405" to "CZ",
-    "00010407" to "GR",
+    "00010407" to "DEI",
     "00010408" to "GK",
     "00010409" to "DV",
     "0001040A" to "SP",
@@ -332,6 +332,9 @@ class KeyboardLayoutInfo {
             }
             "0xfffffffff014" -> {
                 "0001041F"
+            }
+            "0xfffffffff012" -> {
+                "00010407"
             }
             else -> {
                 layoutId.substring(2).padStart(8, '0')
