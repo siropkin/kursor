@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+
+## [1.2.0] - 2024-07-29
+### Changed
+- Plugin settings moved to Tools: `File` > `Settings` > `Tools` > `Kursor`.
+- Fix German keyboard layout abbreviation for Windows.
+
+
 ## [1.1.1] - 2024-07-25
 ### Changed
 - Improved keyboard layout detection for Windows users, including detection of different input methods within the same language. Previously, Kursor would not detect different input methods within one language, but now it does.

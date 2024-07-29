@@ -1,5 +1,6 @@
 package com.github.siropkin.kursor
 
+import com.sun.jna.Platform
 import com.sun.jna.platform.win32.User32
 import com.sun.jna.platform.win32.WinDef
 import com.sun.jna.platform.win32.WinDef.HKL
@@ -16,7 +17,7 @@ private val windowsKeyboardLayoutMap = mapOf(
     "00000404" to "CH",
     "00000405" to "CZ",
     "00000406" to "DK",
-    "00000407" to "GR",
+    "00000407" to "DE",
     "00000408" to "GK",
     "00000409" to "US",
     "0000040A" to "SP",
@@ -57,7 +58,7 @@ private val windowsKeyboardLayoutMap = mapOf(
     "00001809" to "US",
     "00010402" to "US",
     "00010405" to "CZ",
-    "00010407" to "GR",
+    "00010407" to "DEI",
     "00010408" to "GK",
     "00010409" to "DV",
     "0001040A" to "SP",
@@ -78,7 +79,7 @@ private val windowsKeyboardLayoutMap = mapOf(
 )
 
 // https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
-val windowsKeyboardCountryCodeMap = mapOf(
+private val windowsKeyboardCountryCodeMap = mapOf(
     "0004" to "zh-CHS",
     "0401" to "ar-SA",
     "0402" to "bg-BG",
@@ -210,16 +211,15 @@ class KeyboardLayout(private val layout: String, private val country: String, pr
 }
 
 class KeyboardLayoutInfo {
-    private val os: String = System.getProperty("os.name").lowercase()
     private var linuxDistribution: String = System.getenv("DESKTOP_SESSION")?.lowercase() ?: ""
     private var linuxDesktopGroup: String = System.getenv("XDG_SESSION_TYPE")?.lowercase() ?: ""
     private var linuxNonUbuntuKeyboardLayouts: List<String> = emptyList()
 
     fun getLayout(): KeyboardLayout {
         return when {
-            os.startsWith("linux") -> getLinuxKeyboardLayout()
-            os.startsWith("win") -> getWindowsKeyboardLayout()
-            os.startsWith("mac") -> getMacKeyboardLayout()
+            Platform.isLinux() -> getLinuxKeyboardLayout()
+            Platform.isWindows() -> getWindowsKeyboardLayout()
+            Platform.isMac() -> getMacKeyboardLayout()
             else -> KeyboardLayout(unknown, unknown, unknown)
         }
     }
@@ -332,6 +332,9 @@ class KeyboardLayoutInfo {
             }
             "0xfffffffff014" -> {
                 "0001041F"
+            }
+            "0xfffffffff012" -> {
+                "00010407"
             }
             else -> {
                 layoutId.substring(2).padStart(8, '0')
