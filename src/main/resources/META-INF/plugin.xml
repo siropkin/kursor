@@ -17,6 +17,9 @@
         Changed:<br />
         - Add support of Sogou Pinyin Method (Chinese) for macOS.<br />
         <br />
+        For Contributors and Developers:<br />
+        - Migrate from Gradle IntelliJ Plugin 1.x to 2.0.<br />
+        <br />
         <br />
         1.2.0 (2024-07-29)<br />
         ++++++++++++++++++<br />
