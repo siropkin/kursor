@@ -3,6 +3,11 @@
 ## [Unreleased]
 
 
+## [1.3.0] - 2024-07-31
+### Changed
+- Add support of Sogou Pinyin Method (Chinese) for macOS.
+
+
 ## [1.2.0] - 2024-07-29
 ### Changed
 - Plugin settings moved to Tools: `File` > `Settings` > `Tools` > `Kursor`.

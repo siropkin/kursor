@@ -30,6 +30,7 @@ This feature is particularly beneficial for developers juggling multiple languag
 - **🔒 Caps Lock Indicator:** Shows the Caps Lock status on the cursor.
 - **🔧 Customization:** Customize the language indicator's font, size, opacity, and position.
 - **🖥️ Supported Operating Systems:** Available on Windows, Mac, and Linux.
+- **🌐 Supported Languages And Input Methods:** Supports multiple languages and input methods, including Sogou Pinyin Method (Chinese) for macOS.
 
 
 ## Installation
