@@ -73,8 +73,6 @@ To post your feedback or suggestions, visit our GitHub Issues page:
 
 Thank you for supporting Kursor and helping me enhance your coding experience.
 
-<!-- Plugin description end -->
-
 
 ## License
 Kursor is open-source and available under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).
@@ -82,5 +80,4 @@ Kursor is open-source and available under the [Apache 2.0 license](https://www.a
 
 ## Support
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ivan.seredkin)
-
-
+<!-- Plugin description end -->
