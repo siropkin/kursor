@@ -1,7 +1,6 @@
 <idea-plugin require-restart="false">
     <id>com.github.siropkin.kursor</id>
     <name>Kursor</name>
-    <version>1.3.0</version>
     <vendor email="ivan.seredkin@gmail.com">Ivan Seredkin</vendor>
 
     <description><![CDATA[
