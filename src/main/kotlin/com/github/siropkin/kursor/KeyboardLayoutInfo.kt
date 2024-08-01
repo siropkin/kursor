@@ -203,7 +203,7 @@ private val windowsKeyboardCountryCodeMap = mapOf(
 )
 
 private val macKeyboardVariantMap = mapOf(
-    "UserDefined_com.sogou.inputmethod.pinyin" to "CH" // https://pinyin.sogou.com/mac
+    "UserDefined_com.sogou.inputmethod.pinyin" to "ZH" // https://pinyin.sogou.com/mac
 )
 
 class KeyboardLayout(private val layout: String, private val country: String, private val language: String) {
