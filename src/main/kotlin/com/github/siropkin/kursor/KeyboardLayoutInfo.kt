@@ -202,6 +202,10 @@ private val windowsKeyboardCountryCodeMap = mapOf(
     "0801" to "ar-IQ"
 )
 
+private val macKeyboardVariantMap = mapOf(
+    "UserDefined_com.sogou.inputmethod.pinyin" to "ZH" // https://pinyin.sogou.com/mac
+)
+
 class KeyboardLayout(private val layout: String, private val country: String, private val language: String) {
     override fun toString(): String = layout.lowercase().ifEmpty {
         country.lowercase().ifEmpty {
@@ -310,7 +314,8 @@ class KeyboardLayoutInfo {
 
     private fun getMacKeyboardLayout(): KeyboardLayout {
         val locale = InputContext.getInstance().locale
-        return KeyboardLayout("", locale.country, locale.language)
+        val layout = macKeyboardVariantMap[locale.variant] ?: "" // variant example for US: UserDefined_252
+        return KeyboardLayout(layout, locale.country, locale.language)
     }
 
     private fun getWindowsKeyboardLayout(): KeyboardLayout {

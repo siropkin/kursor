@@ -30,6 +30,7 @@ This feature is particularly beneficial for developers juggling multiple languag
 - **🔒 Caps Lock Indicator:** Shows the Caps Lock status on the cursor.
 - **🔧 Customization:** Customize the language indicator's font, size, opacity, and position.
 - **🖥️ Supported Operating Systems:** Available on Windows, Mac, and Linux.
+- **🌐 Supported Languages And Input Methods:** Supports multiple languages and input methods, including Sogou Pinyin Method (Chinese) for macOS.
 
 
 ## Installation
@@ -72,8 +73,6 @@ To post your feedback or suggestions, visit our GitHub Issues page:
 
 Thank you for supporting Kursor and helping me enhance your coding experience.
 
-<!-- Plugin description end -->
-
 
 ## License
 Kursor is open-source and available under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).
@@ -81,5 +80,4 @@ Kursor is open-source and available under the [Apache 2.0 license](https://www.a
 
 ## Support
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ivan.seredkin)
-
-
+<!-- Plugin description end -->

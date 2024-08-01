@@ -3,6 +3,14 @@
 ## [Unreleased]
 
 
+## [1.3.0] - 2024-07-31
+### Changed
+- Add support of Sogou Pinyin Method (Chinese) for macOS.
+
+### For Contributors and Developers
+- Migrate from Gradle IntelliJ Plugin 1.x to 2.0.
+
+
 ## [1.2.0] - 2024-07-29
 ### Changed
 - Plugin settings moved to Tools: `File` > `Settings` > `Tools` > `Kursor`.
