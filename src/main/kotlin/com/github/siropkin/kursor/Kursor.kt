@@ -18,9 +18,8 @@ object IndicatorPosition {
     const val BOTTOM = "bottom"
 }
 
-
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    private val keyboardLayoutInfo = KeyboardLayoutInfo()
+    private val keyboardLayout = KeyboardLayout()
 
     init {
         editor.contentComponent.add(this)
@@ -116,16 +115,16 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
         val settings = getSettings()
         val isCapsLockOn = settings.indicateCapsLock && getIsCapsLockOn()
-        val keyboardLayout = keyboardLayoutInfo.getLayout()
-        var keyboardLayoutString = keyboardLayout.toString()
-        if (keyboardLayoutString.isEmpty()) {
+        val keyboardLayoutInfo = keyboardLayout.getInfo()
+        var keyboardLayoutStringInfo = keyboardLayoutInfo.toString()
+        if (keyboardLayoutStringInfo.isEmpty()) {
             return
         }
 
         val caret = getPrimaryCaret()
         var caretColor: Color? = null
         if (settings.changeColorOnNonDefaultLanguage) {
-            if (keyboardLayoutString != settings.defaultLanguage) {
+            if (keyboardLayoutStringInfo != settings.defaultLanguage) {
                 caretColor = settings.colorOnNonDefaultLanguage
             }
         }
@@ -138,13 +137,13 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             return
         }
 
-        val showIndicator = settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutString.lowercase() != settings.defaultLanguage.lowercase()
+        val showIndicator = settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutStringInfo.lowercase() != settings.defaultLanguage.lowercase()
         if (!showIndicator) {
             return
         }
 
         if (isCapsLockOn) {
-            keyboardLayoutString = keyboardLayoutString.uppercase()
+            keyboardLayoutStringInfo = keyboardLayoutStringInfo.uppercase()
         }
 
         val caretWidth = getCaretWidth(caret)
@@ -165,6 +164,6 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         } else {
             getColorWithAlpha(caretColor, settings.indicatorFontAlpha)
         }
-        g.drawString(keyboardLayoutString, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
+        g.drawString(keyboardLayoutStringInfo, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }
 }
