@@ -21,18 +21,18 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
     var changeColorOnNonDefaultLanguage: Boolean = true
     var colorOnNonDefaultLanguage: Color = Color(255, 140, 0)
 
-    var showIndicator: Boolean = true
+    var showTextIndicator: Boolean = true
+
+    var textIndicatorFontName: String = EditorColorsManager.getInstance().globalScheme.editorFontName
+    var textIndicatorFontStyle: Int = Font.PLAIN
+    var textIndicatorFontSize: Int = 11
+    var textIndicatorFontAlpha: Int = 180
+
+    var textIndicatorVerticalPosition: String = IndicatorPosition.TOP
+    var textIndicatorHorizontalOffset: Int = 4
 
     var indicateCapsLock: Boolean = true
     var indicateDefaultLanguage: Boolean = false
-
-    var indicatorFontName: String = EditorColorsManager.getInstance().globalScheme.editorFontName
-    var indicatorFontStyle: Int = Font.PLAIN
-    var indicatorFontSize: Int = 11
-    var indicatorFontAlpha: Int = 180
-
-    var indicatorVerticalPosition: String = IndicatorPosition.TOP
-    var indicatorHorizontalOffset: Int = 4
 
     override fun getState(): KursorSettings {
         return this

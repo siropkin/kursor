@@ -33,13 +33,6 @@ This feature is particularly beneficial for developers juggling multiple languag
 - **🌐 Supported Languages And Input Methods:** Supports multiple languages and input methods, including Sogou Pinyin Method (Chinese) for macOS.
 
 
-## Installation
-[Get from marketplace](https://plugins.jetbrains.com/plugin/22072-kursor) or install it directly inside your IDE:
-
-- **For Windows & Linux:** `File` > `Settings` > `Plugins` > `Marketplace` > Search for "Kursor" > `Install Plugin` > Restart IntelliJ IDEA
-- **For Mac:** `IntelliJ IDEA` > `Preferences` > `Plugins` > `Marketplace` > Search for "Kursor" > `Install Plugin` > Restart IntelliJ IDEA
-
-
 ## Usage
 Once installed, Kursor will automatically run when you open your project in IntelliJ IDEA.
 
@@ -79,5 +72,5 @@ Kursor is open-source and available under the [Apache 2.0 license](https://www.a
 
 
 ## Support
-[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ivan.seredkin)
+[Buy Me A Coffee](https://www.buymeacoffee.com/ivan.seredkin)
 <!-- Plugin description end -->

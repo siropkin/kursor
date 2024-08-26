@@ -18,9 +18,8 @@ object IndicatorPosition {
     const val BOTTOM = "bottom"
 }
 
-
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    private val keyboardLayoutInfo = KeyboardLayoutInfo()
+    private val keyboardLayout = KeyboardLayout()
 
     init {
         editor.contentComponent.add(this)
@@ -116,16 +115,16 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
         val settings = getSettings()
         val isCapsLockOn = settings.indicateCapsLock && getIsCapsLockOn()
-        val keyboardLayout = keyboardLayoutInfo.getLayout()
-        var keyboardLayoutString = keyboardLayout.toString()
-        if (keyboardLayoutString.isEmpty()) {
+        val keyboardLayoutInfo = keyboardLayout.getInfo()
+        var keyboardLayoutStringInfo = keyboardLayoutInfo.toString()
+        if (keyboardLayoutStringInfo.isEmpty()) {
             return
         }
 
         val caret = getPrimaryCaret()
         var caretColor: Color? = null
         if (settings.changeColorOnNonDefaultLanguage) {
-            if (keyboardLayoutString != settings.defaultLanguage) {
+            if (keyboardLayoutStringInfo != settings.defaultLanguage) {
                 caretColor = settings.colorOnNonDefaultLanguage
             }
         }
@@ -134,37 +133,37 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             setCaretColor(caret, caretColor)
         }
 
-        if (!settings.showIndicator) {
+        if (!settings.showTextIndicator) {
             return
         }
 
-        val showIndicator = settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutString.lowercase() != settings.defaultLanguage.lowercase()
-        if (!showIndicator) {
+        val showTextIndicator = settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutStringInfo.lowercase() != settings.defaultLanguage.lowercase()
+        if (!showTextIndicator) {
             return
         }
 
         if (isCapsLockOn) {
-            keyboardLayoutString = keyboardLayoutString.uppercase()
+            keyboardLayoutStringInfo = keyboardLayoutStringInfo.uppercase()
         }
 
         val caretWidth = getCaretWidth(caret)
         val caretHeight = getCaretHeight(caret)
         val caretPosition = getCaretPosition(caret)
 
-        val indicatorOffsetX = caretWidth + settings.indicatorHorizontalOffset
-        val indicatorOffsetY = when (settings.indicatorVerticalPosition) {
-            IndicatorPosition.TOP -> (if (caret.visualPosition.line == 0) settings.indicatorFontSize else settings.indicatorFontSize / 2) - 1
-            IndicatorPosition.MIDDLE -> caretHeight / 2 + settings.indicatorFontSize / 2 - 1
+        val indicatorOffsetX = caretWidth + settings.textIndicatorHorizontalOffset
+        val indicatorOffsetY = when (settings.textIndicatorVerticalPosition) {
+            IndicatorPosition.TOP -> (if (caret.visualPosition.line == 0) settings.textIndicatorFontSize else settings.textIndicatorFontSize / 2) - 1
+            IndicatorPosition.MIDDLE -> caretHeight / 2 + settings.textIndicatorFontSize / 2 - 1
             IndicatorPosition.BOTTOM -> caretHeight + 3
             else -> 0
         }
 
-        g.font = Font(settings.indicatorFontName, settings.indicatorFontStyle, settings.indicatorFontSize)
+        g.font = Font(settings.textIndicatorFontName, settings.textIndicatorFontStyle, settings.textIndicatorFontSize)
         g.color = if (caretColor == null) {
-            getColorWithAlpha(getDefaultCaretColor()!!, settings.indicatorFontAlpha)
+            getColorWithAlpha(getDefaultCaretColor()!!, settings.textIndicatorFontAlpha)
         } else {
-            getColorWithAlpha(caretColor, settings.indicatorFontAlpha)
+            getColorWithAlpha(caretColor, settings.textIndicatorFontAlpha)
         }
-        g.drawString(keyboardLayoutString, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
+        g.drawString(keyboardLayoutStringInfo, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }
 }

@@ -3,6 +3,11 @@
 ## [Unreleased]
 
 
+## [1.3.1] - 2024-08-26
+### Changed
+- Fix NullPointerException for Windows users.
+
+
 ## [1.3.0] - 2024-07-31
 ### Changed
 - Add support of Sogou Pinyin Method (Chinese) for macOS.
