@@ -133,12 +133,12 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             setCaretColor(caret, caretColor)
         }
 
-        if (!settings.showIndicator) {
+        if (!settings.showTextIndicator) {
             return
         }
 
-        val showIndicator = settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutStringInfo.lowercase() != settings.defaultLanguage.lowercase()
-        if (!showIndicator) {
+        val showTextIndicator = settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutStringInfo.lowercase() != settings.defaultLanguage.lowercase()
+        if (!showTextIndicator) {
             return
         }
 
@@ -150,19 +150,19 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         val caretHeight = getCaretHeight(caret)
         val caretPosition = getCaretPosition(caret)
 
-        val indicatorOffsetX = caretWidth + settings.indicatorHorizontalOffset
-        val indicatorOffsetY = when (settings.indicatorVerticalPosition) {
-            IndicatorPosition.TOP -> (if (caret.visualPosition.line == 0) settings.indicatorFontSize else settings.indicatorFontSize / 2) - 1
-            IndicatorPosition.MIDDLE -> caretHeight / 2 + settings.indicatorFontSize / 2 - 1
+        val indicatorOffsetX = caretWidth + settings.textIndicatorHorizontalOffset
+        val indicatorOffsetY = when (settings.textIndicatorVerticalPosition) {
+            IndicatorPosition.TOP -> (if (caret.visualPosition.line == 0) settings.textIndicatorFontSize else settings.textIndicatorFontSize / 2) - 1
+            IndicatorPosition.MIDDLE -> caretHeight / 2 + settings.textIndicatorFontSize / 2 - 1
             IndicatorPosition.BOTTOM -> caretHeight + 3
             else -> 0
         }
 
-        g.font = Font(settings.indicatorFontName, settings.indicatorFontStyle, settings.indicatorFontSize)
+        g.font = Font(settings.textIndicatorFontName, settings.textIndicatorFontStyle, settings.textIndicatorFontSize)
         g.color = if (caretColor == null) {
-            getColorWithAlpha(getDefaultCaretColor()!!, settings.indicatorFontAlpha)
+            getColorWithAlpha(getDefaultCaretColor()!!, settings.textIndicatorFontAlpha)
         } else {
-            getColorWithAlpha(caretColor, settings.indicatorFontAlpha)
+            getColorWithAlpha(caretColor, settings.textIndicatorFontAlpha)
         }
         g.drawString(keyboardLayoutStringInfo, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }

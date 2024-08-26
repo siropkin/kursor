@@ -26,15 +26,15 @@ class KursorSettingsConfigurable: Configurable {
             return it.defaultLanguage != settings.defaultLanguage
                     || it.changeColorOnNonDefaultLanguage != settings.changeColorOnNonDefaultLanguage
                     || it.colorOnNonDefaultLanguage != settings.colorOnNonDefaultLanguage
-                    || it.showIndicator != settings.showIndicator
+                    || it.showTextIndicator != settings.showTextIndicator
                     || it.indicateCapsLock != settings.indicateCapsLock
                     || it.indicateDefaultLanguage != settings.indicateDefaultLanguage
-                    || it.indicatorFontName != settings.indicatorFontName
-                    || it.indicatorFontStyle != settings.indicatorFontStyle
-                    || it.indicatorFontSize != settings.indicatorFontSize
-                    || it.indicatorFontAlpha != settings.indicatorFontAlpha
-                    || it.indicatorVerticalPosition != settings.indicatorVerticalPosition
-                    || it.indicatorHorizontalOffset != settings.indicatorHorizontalOffset
+                    || it.textIndicatorFontName != settings.textIndicatorFontName
+                    || it.textIndicatorFontStyle != settings.textIndicatorFontStyle
+                    || it.textIndicatorFontSize != settings.textIndicatorFontSize
+                    || it.textIndicatorFontAlpha != settings.textIndicatorFontAlpha
+                    || it.textIndicatorVerticalPosition != settings.textIndicatorVerticalPosition
+                    || it.textIndicatorHorizontalOffset != settings.textIndicatorHorizontalOffset
         }
         return false
     }
@@ -44,15 +44,15 @@ class KursorSettingsConfigurable: Configurable {
         settings.defaultLanguage = settingsComponent!!.defaultLanguage
         settings.changeColorOnNonDefaultLanguage = settingsComponent!!.changeColorOnNonDefaultLanguage
         settings.colorOnNonDefaultLanguage = settingsComponent!!.colorOnNonDefaultLanguage!!
-        settings.showIndicator = settingsComponent!!.showIndicator
+        settings.showTextIndicator = settingsComponent!!.showTextIndicator
         settings.indicateCapsLock = settingsComponent!!.indicateCapsLock
         settings.indicateDefaultLanguage = settingsComponent!!.indicateDefaultLanguage
-        settings.indicatorFontName = settingsComponent!!.indicatorFontName
-        settings.indicatorFontStyle = settingsComponent!!.indicatorFontStyle
-        settings.indicatorFontSize = settingsComponent!!.indicatorFontSize
-        settings.indicatorFontAlpha = settingsComponent!!.indicatorFontAlpha
-        settings.indicatorVerticalPosition = settingsComponent!!.indicatorVerticalPosition
-        settings.indicatorHorizontalOffset = settingsComponent!!.indicatorHorizontalOffset
+        settings.textIndicatorFontName = settingsComponent!!.textIndicatorFontName
+        settings.textIndicatorFontStyle = settingsComponent!!.textIndicatorFontStyle
+        settings.textIndicatorFontSize = settingsComponent!!.textIndicatorFontSize
+        settings.textIndicatorFontAlpha = settingsComponent!!.textIndicatorFontAlpha
+        settings.textIndicatorVerticalPosition = settingsComponent!!.textIndicatorVerticalPosition
+        settings.textIndicatorHorizontalOffset = settingsComponent!!.textIndicatorHorizontalOffset
     }
 
     override fun reset() {
@@ -61,15 +61,15 @@ class KursorSettingsConfigurable: Configurable {
             it.defaultLanguage = settings.defaultLanguage
             it.changeColorOnNonDefaultLanguage = settings.changeColorOnNonDefaultLanguage
             it.colorOnNonDefaultLanguage = settings.colorOnNonDefaultLanguage
-            it.showIndicator = settings.showIndicator
+            it.showTextIndicator = settings.showTextIndicator
             it.indicateCapsLock = settings.indicateCapsLock
             it.indicateDefaultLanguage = settings.indicateDefaultLanguage
-            it.indicatorFontName = settings.indicatorFontName
-            it.indicatorFontStyle = settings.indicatorFontStyle
-            it.indicatorFontSize = settings.indicatorFontSize
-            it.indicatorFontAlpha = settings.indicatorFontAlpha
-            it.indicatorVerticalPosition = settings.indicatorVerticalPosition
-            it.indicatorHorizontalOffset = settings.indicatorHorizontalOffset
+            it.textIndicatorFontName = settings.textIndicatorFontName
+            it.textIndicatorFontStyle = settings.textIndicatorFontStyle
+            it.textIndicatorFontSize = settings.textIndicatorFontSize
+            it.textIndicatorFontAlpha = settings.textIndicatorFontAlpha
+            it.textIndicatorVerticalPosition = settings.textIndicatorVerticalPosition
+            it.textIndicatorHorizontalOffset = settings.textIndicatorHorizontalOffset
         }
     }
 
