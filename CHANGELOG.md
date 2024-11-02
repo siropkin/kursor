@@ -3,6 +3,13 @@
 ## [Unreleased]
 
 
+## [1.4.0] - 2024-11-... (TBD)
+### Changed
+- #18 Add support of "Squirrel Method" (Chinese) (https://rime.im) for macOS.
+- #20 Add support of "Russian - PC" for macOS.
+- #21 Add ColorConverter to serialize and deserialize colorOnNonDefaultLanguage setting
+
+
 ## [1.3.1] - 2024-08-26
 ### Changed
 - Fix NullPointerException for Windows users.

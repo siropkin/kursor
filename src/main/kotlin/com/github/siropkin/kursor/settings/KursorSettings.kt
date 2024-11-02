@@ -6,10 +6,14 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.util.xmlb.Converter
 import com.intellij.util.xmlb.XmlSerializerUtil
+import com.intellij.util.xmlb.annotations.OptionTag
 import java.awt.Color
 import java.awt.Font
 
+
+val COLOR_ON_NON_DEFAULT_LANGUAGE = Color(255, 140, 0)
 
 @State(
     name = "package com.github.siropkin.kursor.settings.KursorSettings",
@@ -19,7 +23,8 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
     var defaultLanguage: String = "us"
 
     var changeColorOnNonDefaultLanguage: Boolean = true
-    var colorOnNonDefaultLanguage: Color = Color(255, 140, 0)
+    @OptionTag("colorOnNonDefaultLanguage_", converter = ColorConverter::class)
+    var colorOnNonDefaultLanguage: Color = COLOR_ON_NON_DEFAULT_LANGUAGE
 
     var showTextIndicator: Boolean = true
 
@@ -46,5 +51,16 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
         fun getInstance(): KursorSettings {
             return ApplicationManager.getApplication().getService(KursorSettings::class.java)
         }
+    }
+}
+
+class ColorConverter : Converter<Color>() {
+    override fun fromString(value: String): Color {
+        val parts = value.split(",")
+        return Color(parts[0].toInt(), parts[1].toInt(), parts[2].toInt(), parts[3].toInt())
+    }
+
+    override fun toString(value: Color): String {
+        return "${value.red},${value.green},${value.blue},${value.alpha}"
     }
 }
