@@ -13,8 +13,6 @@ import java.awt.Color
 import java.awt.Font
 
 
-val COLOR_ON_NON_DEFAULT_LANGUAGE = Color(255, 140, 0)
-
 @State(
     name = "package com.github.siropkin.kursor.settings.KursorSettings",
     storages = [Storage("Kursor.xml")]
@@ -24,7 +22,7 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
 
     var changeColorOnNonDefaultLanguage: Boolean = true
     @OptionTag("colorOnNonDefaultLanguage_", converter = ColorConverter::class)
-    var colorOnNonDefaultLanguage: Color = COLOR_ON_NON_DEFAULT_LANGUAGE
+    var colorOnNonDefaultLanguage: Color = Color(255, 140, 0)
 
     var showTextIndicator: Boolean = true
 
