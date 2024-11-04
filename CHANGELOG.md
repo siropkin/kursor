@@ -5,9 +5,12 @@
 
 ## [1.4.0]
 ### Changed
-- #18 Added support for "Squirrel Method" (Chinese) (https://rime.im) on macOS.
-- #20 Added support for "Russian - PC" on macOS.
-- #21 Fixed color settings save bug; color settings now save correctly.
+- #18 Add support for "Squirrel Method" (Chinese) (https://rime.im) on macOS.
+- #20 Add support for "Russian - PC" on macOS.
+- #21 Fix color settings save bug; color settings now save correctly.
+
+### For Contributors and Developers
+- #24 Update IntelliJ Plugin to v2.0.2.
 
 
 ## [1.3.1] - 2024-08-26
