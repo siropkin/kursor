@@ -3,6 +3,13 @@
 ## [Unreleased]
 
 
+## [1.4.0] - 2024-11-04
+### Changed
+- #18: Added support for "Squirrel Method" (Chinese) (https://rime.im) on macOS.
+- #20: Added support for "Russian - PC" on macOS.
+- #21: Fixed color settings save bug; color settings now save correctly.
+
+
 ## [1.3.1] - 2024-08-26
 ### Changed
 - Fix NullPointerException for Windows users.
