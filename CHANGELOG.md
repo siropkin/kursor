@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 
-## [1.4.0] - 2024-11-... (TBD)
+## [1.4.0] - 2024-11-04
 ### Changed
 - #18: Added support for "Squirrel Method" (Chinese) (https://rime.im) on macOS.
 - #20: Added support for "Russian - PC" on macOS.
