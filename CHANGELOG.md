@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 
-## [1.4.0]
+## [1.4.1]
 ### Changed
 - #18 Add support for "Squirrel Method" (Chinese) (https://rime.im) on macOS.
 - #20 Add support for "Russian - PC" on macOS.
@@ -11,6 +11,10 @@
 
 ### For Contributors and Developers
 - #24 Update IntelliJ Plugin to v2.0.2.
+
+
+## [1.4.0]
+Version skipped due to a mistake in the release process.
 
 
 ## [1.3.1] - 2024-08-26
