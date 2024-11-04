@@ -81,8 +81,8 @@ private val windowsKeyboardVariantMap = mapOf(
 private val macKeyboardVariantMap = mapOf(
     "UserDefined_19458" to "RU", // Russian
     "UserDefined_com.sogou.inputmethod.pinyin" to "ZH", // Sogou Pinyin: https://pinyin.sogou.com/mac
-    "UserDefined_im.rime.inputmethod.Squirrel.Hans" to "SS", // Squirrel - Simplified： https://rime.im
-    "UserDefined_im.rime.inputmethod.Squirrel.Hant" to "ST" // Squirrel - Traditional： https://rime.im
+    "UserDefined_im.rime.inputmethod.Squirrel.Hans" to "ZH", // Squirrel - Simplified： https://rime.im
+    "UserDefined_im.rime.inputmethod.Squirrel.Hant" to "ZH" // Squirrel - Traditional： https://rime.im
 )
 
 class KeyboardLayoutInfo(private val language: String, private val country: String, private val variant: String) {
