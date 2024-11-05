@@ -1,6 +1,9 @@
 # Kursor Changelog
 
 ## [Unreleased]
+
+
+## [1.4.2]
 ### Fixed
 - #28 Fix "Do not call invokeLater when app is not yet fully initialized" error on startup.
 - #29 Fix "Migrate com.github.siropkin.kursor.KursorStartupActivity to ProjectActivity" development warning on startup.
