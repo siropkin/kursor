@@ -47,7 +47,11 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
 
     companion object {
         fun getInstance(): KursorSettings {
-            return ApplicationManager.getApplication().getService(KursorSettings::class.java)
+            return try {
+                ApplicationManager.getApplication().getService(KursorSettings::class.java)
+            } catch (e: Exception) {
+                KursorSettings()
+            }
         }
     }
 }

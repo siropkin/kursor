@@ -1,6 +1,8 @@
 # Kursor Changelog
 
 ## [Unreleased]
+### Fixed
+- #28 Fix "Do not call invokeLater when app is not yet fully initialized" error on startup.
 
 
 ## [1.4.1]
