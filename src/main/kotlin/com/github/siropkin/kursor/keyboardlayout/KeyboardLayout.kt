@@ -122,7 +122,8 @@ class KeyboardLayout {
 
     private fun getMacLayoutInfo(): KeyboardLayoutInfo {
         val locale = InputContext.getInstance().locale
-        val variant = MacKeyboardVariants[locale.variant] ?: "" // variant example for US: UserDefined_252
+        // Variant example for US: UserDefined_252
+        val variant = MacKeyboardVariants[locale.variant] ?: ""
         return KeyboardLayoutInfo(locale.language, locale.country, variant)
     }
 
