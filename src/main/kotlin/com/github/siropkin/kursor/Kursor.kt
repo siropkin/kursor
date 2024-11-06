@@ -1,7 +1,11 @@
 package com.github.siropkin.kursor
 
+import com.github.siropkin.kursor.keyboardlayout.KeyboardLayout
 import com.github.siropkin.kursor.settings.KursorSettings
-import com.intellij.openapi.editor.*
+import com.intellij.openapi.editor.Caret
+import com.intellij.openapi.editor.CaretVisualAttributes
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.VisualPosition
 import com.intellij.openapi.editor.colors.EditorColors
 import com.intellij.openapi.editor.event.CaretEvent
 import com.intellij.openapi.editor.event.CaretListener
@@ -113,39 +117,34 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             return
         }
 
-        val settings = getSettings()
-        val isCapsLockOn = settings.indicateCapsLock && getIsCapsLockOn()
-        val keyboardLayoutInfo = keyboardLayout.getInfo()
-        var keyboardLayoutStringInfo = keyboardLayoutInfo.toString()
-        if (keyboardLayoutStringInfo.isEmpty()) {
+        val keyboardLayoutString = keyboardLayout.getLayoutInfo().toString()
+        if (keyboardLayoutString.isEmpty()) {
             return
         }
 
+        val settings = getSettings()
         val caret = getPrimaryCaret()
-        var caretColor: Color? = null
-        if (settings.changeColorOnNonDefaultLanguage) {
-            if (keyboardLayoutStringInfo != settings.defaultLanguage) {
-                caretColor = settings.colorOnNonDefaultLanguage
-            }
+        val caretColor = if (settings.changeColorOnNonDefaultLanguage && keyboardLayoutString.lowercase() != settings.defaultLanguage.lowercase()) {
+            settings.colorOnNonDefaultLanguage
+        } else {
+            null
         }
 
         if (caret.visualAttributes.color != caretColor) {
             setCaretColor(caret, caretColor)
         }
 
-        if (!settings.showTextIndicator) {
-            return
-        }
-
-        val showTextIndicator = settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutStringInfo.lowercase() != settings.defaultLanguage.lowercase()
+        val isCapsLockOn = settings.indicateCapsLock && getIsCapsLockOn()
+        val showTextIndicator = settings.showTextIndicator && (settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutString.lowercase() != settings.defaultLanguage.lowercase())
         if (!showTextIndicator) {
             return
         }
 
-        if (isCapsLockOn) {
-            keyboardLayoutStringInfo = keyboardLayoutStringInfo.uppercase()
+        val displayText = if (isCapsLockOn) {
+            keyboardLayoutString.uppercase()
+        } else {
+            keyboardLayoutString.lowercase()
         }
-
         val caretWidth = getCaretWidth(caret)
         val caretHeight = getCaretHeight(caret)
         val caretPosition = getCaretPosition(caret)
@@ -159,11 +158,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         }
 
         g.font = Font(settings.textIndicatorFontName, settings.textIndicatorFontStyle, settings.textIndicatorFontSize)
-        g.color = if (caretColor == null) {
-            getColorWithAlpha(getDefaultCaretColor()!!, settings.textIndicatorFontAlpha)
-        } else {
-            getColorWithAlpha(caretColor, settings.textIndicatorFontAlpha)
-        }
-        g.drawString(keyboardLayoutStringInfo, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
+        g.color = getColorWithAlpha(caretColor ?: getDefaultCaretColor()!!, settings.textIndicatorFontAlpha)
+        g.drawString(displayText, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }
 }

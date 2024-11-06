@@ -1,16 +1,19 @@
 package com.github.siropkin.kursor.settings
 
 import com.github.siropkin.kursor.IndicatorPosition
-import com.github.siropkin.kursor.KeyboardLayout
+import com.github.siropkin.kursor.keyboardlayout.KeyboardLayout
+import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
-import com.intellij.openapi.ui.ComboBox
 import com.intellij.util.ui.JBUI
 import java.awt.*
-import javax.swing.*
+import javax.swing.BoxLayout
+import javax.swing.JButton
+import javax.swing.JComponent
+import javax.swing.JPanel
 
 
 private const val LABEL_SPACING = 10
@@ -145,7 +148,7 @@ class KursorSettingsComponent {
         languagePanel.add(detectKeyboardLayoutButton, createRbc(2, 0, 1.0, COMPONENT_SPACING))
 
         detectKeyboardLayoutButton.addActionListener {
-            defaultLanguageComponent.text = keyboardLayout.getInfo().toString()
+            defaultLanguageComponent.text = keyboardLayout.getLayoutInfo().toString().lowercase()
         }
 
         return languagePanel

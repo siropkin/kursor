@@ -3,9 +3,18 @@
 ## [Unreleased]
 
 
+## [1.4.2]
+### Changed
+- #30 Add support for "Ukrainian" and "Ukrainian-QWERTY" on macOS.
+
+### Fixed
+- #28 Fix "Do not call invokeLater when app is not yet fully initialized" error on startup.
+- #29 Fix "Migrate com.github.siropkin.kursor.KursorStartupActivity to ProjectActivity" development warning on startup.
+
+
 ## [1.4.1]
 ### Changed
-- #18 Add support for "Squirrel Method" (Chinese) (https://rime.im) on macOS.
+- #18 Add support for [Squirrel](https://rime.im) method (Zhuyin) on macOS.
 - #20 Add support for "Russian - PC" on macOS.
 - #21 Fix color settings save bug; color settings now save correctly.
 
@@ -24,7 +33,7 @@ Version skipped due to a mistake in the release process.
 
 ## [1.3.0] - 2024-07-31
 ### Changed
-- Add support of Sogou Pinyin Method (Chinese) for macOS.
+- Add support of [Sogou Pinyin](https://pinyin.sogou.com/mac) method (Zhuyin) for macOS.
 
 ### For Contributors and Developers
 - Migrate from Gradle IntelliJ Plugin 1.x to 2.0.

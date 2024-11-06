@@ -6,14 +6,14 @@ import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.EditorFactoryEvent
 import com.intellij.openapi.editor.event.EditorFactoryListener
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.startup.ProjectActivity
 import java.awt.event.KeyEvent
 
 
-class KursorStartupActivity: StartupActivity {
+class KursorStartupActivity: ProjectActivity {
     private val kursors = mutableMapOf<Editor, Kursor>()
 
-    override fun runActivity(project: Project) {
+    override suspend fun execute(project: Project) {
         // add kursor to all existing editors
         val editors: Array<Editor> = EditorFactory.getInstance().allEditors
         for (editor in editors) {
