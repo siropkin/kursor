@@ -1,4 +1,4 @@
-package com.github.siropkin.kursor
+package com.github.siropkin.kursor.keyboardlayout
 
 import com.sun.jna.Platform
 import com.sun.jna.platform.win32.User32
@@ -9,140 +9,69 @@ import java.io.BufferedReader
 import java.io.IOException
 
 
-private const val unknown = "unk"
-
-// https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-language-pack-default-values
-private val windowsKeyboardVariantMap = mapOf(
-    "00000402" to "BG",
-    "00000404" to "CH",
-    "00000405" to "CZ",
-    "00000406" to "DK",
-    "00000407" to "DE",
-    "00000408" to "GK",
-    "00000409" to "US",
-    "0000040A" to "SP",
-    "0000040B" to "SU",
-    "0000040C" to "FR",
-    "0000040E" to "HU",
-    "0000040F" to "IS",
-    "00000410" to "IT",
-    "00000411" to "JP",
-    "00000412" to "KO",
-    "00000413" to "NL",
-    "00000414" to "NO",
-    "00000415" to "PL",
-    "00000416" to "BR",
-    "00000418" to "RO",
-    "00000419" to "RU",
-    "0000041A" to "YU",
-    "0000041B" to "SL",
-    "0000041C" to "US",
-    "0000041D" to "SV",
-    "0000041F" to "TR",
-    "00000422" to "US",
-    "00000423" to "US",
-    "00000424" to "YU",
-    "00000425" to "ET",
-    "00000426" to "US",
-    "00000427" to "US",
-    "00000804" to "CH",
-    "00000809" to "UK",
-    "0000080A" to "LA",
-    "0000080C" to "BE",
-    "00000813" to "BE",
-    "00000816" to "PO",
-    "00000C0C" to "CF",
-    "00000C1A" to "US",
-    "00001009" to "CAFR",
-    "0000100C" to "SF",
-    "00001809" to "US",
-    "00010402" to "US",
-    "00010405" to "CZ",
-    "00010407" to "DEI",
-    "00010408" to "GK",
-    "00010409" to "DV",
-    "0001040A" to "SP",
-    "0001040E" to "HU",
-    "00010410" to "IT",
-    "00010415" to "PL",
-    "00010419" to "RUT",
-    "0001041B" to "SL",
-    "0001041F" to "TRF",
-    "00010426" to "US",
-    "00010C0C" to "CF",
-    "00010C1A" to "US",
-    "00020408" to "GK",
-    "00020409" to "US",
-    "00030409" to "USL",
-    "00040409" to "USR",
-    "00050408" to "GK"
-)
-
-private val macKeyboardVariantMap = mapOf(
-    "UserDefined_19458" to "RU", // Russian
-    "UserDefined_com.sogou.inputmethod.pinyin" to "ZH", // Sogou Pinyin: https://pinyin.sogou.com/mac
-    "UserDefined_im.rime.inputmethod.Squirrel.Hans" to "ZH", // Squirrel - Simplified： https://rime.im
-    "UserDefined_im.rime.inputmethod.Squirrel.Hant" to "ZH" // Squirrel - Traditional： https://rime.im
-)
-
-class KeyboardLayoutInfo(private val language: String, private val country: String, private val variant: String) {
-    override fun toString(): String = variant.lowercase().ifEmpty {
-        country.lowercase().ifEmpty {
-            language.lowercase()
-        }
-    }
-}
-
 class KeyboardLayout {
+    private val unknown = "UNK"
     private var linuxDistribution: String = System.getenv("DESKTOP_SESSION")?.lowercase() ?: ""
     private var linuxDesktopGroup: String = System.getenv("XDG_SESSION_TYPE")?.lowercase() ?: ""
-    private var linuxNonUbuntuKeyboardLayouts: List<String> = emptyList()
+    private var linuxKeyboardLayoutsCache: List<String> = emptyList()
 
-    fun getInfo(): KeyboardLayoutInfo {
+    fun getLayoutInfo(): KeyboardLayoutInfo {
         return when {
-            Platform.isLinux() -> getLinuxKeyboardLayout()
-            Platform.isMac() -> getMacKeyboardLayout()
-            Platform.isWindows() -> getWindowsKeyboardLayout()
-            else -> KeyboardLayoutInfo(unknown, unknown, unknown)
+            Platform.isLinux() -> getLinuxLayoutInfo()
+            Platform.isMac() -> getMacLayoutInfo()
+            Platform.isWindows() -> getWindowsLayoutInfo()
+            else -> getUnknownLayoutInfo()
         }
     }
 
-    private fun getLinuxKeyboardLayout(): KeyboardLayoutInfo {
+    private fun getUnknownLayoutInfo(): KeyboardLayoutInfo {
+        return KeyboardLayoutInfo(unknown, unknown, unknown)
+    }
+
+    private fun getLinuxLayoutInfo(): KeyboardLayoutInfo {
         // InputContext.getInstance().locale is not working on Linux: it always returns "en_US"
         // This is not the ideal solution because it involves executing a shell command to know the current keyboard layout
         // which might affect the performance. And we have different commands for different Linux distributions.
         // But it is the only solution I found that works on Linux.
         // For Linux we know only keyboard layout and do not know keyboard language
-        if (linuxDistribution == "ubuntu") {
-            // output example: [('xkb', 'us'), ('xkb', 'ru'), ('xkb', 'ca+eng')]
-            val split = executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
-                .substringAfter("('xkb', '")
-                .substringBefore("')")
-                .split("+")
-            val language = if (split.size > 1) split[1] else ""
-            val country = split[0]
-            return KeyboardLayoutInfo(language, country, "")
+        return when {
+            linuxDistribution == "ubuntu" -> getUbuntuLayoutInfo()
+            linuxDesktopGroup == "wayland" -> getWaylandLayoutInfo()
+            else -> getOtherLinuxLayoutInfo()
         }
+    }
 
-        // FIXME: This command does not work on linuxDesktopGroup = "wayland",
+    private fun getUbuntuLayoutInfo(): KeyboardLayoutInfo {
+        // Output example: [('xkb', 'us'), ('xkb', 'ru'), ('xkb', 'ca+eng')]
+        val split = executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
+            .substringAfter("('xkb', '")
+            .substringBefore("')")
+            .split("+")
+        val language = if (split.size > 1) split[1] else ""
+        val country = split[0]
+        return KeyboardLayoutInfo(language, country, "")
+    }
+
+    private fun getWaylandLayoutInfo(): KeyboardLayoutInfo {
+        // FIXME: Other Linux distribution commands not working "Wayland",
         //  see: https://github.com/siropkin/kursor/issues/3
-        if (linuxDesktopGroup == "wayland") {
-            return KeyboardLayoutInfo(unknown, unknown, unknown)
-        }
+        return getUnknownLayoutInfo()
+    }
 
-        if (linuxNonUbuntuKeyboardLayouts.isEmpty()) {
-            // output example: rules:      evdev
+    private fun getOtherLinuxLayoutInfo(): KeyboardLayoutInfo {
+        if (linuxKeyboardLayoutsCache.isEmpty()) {
+            // Output example: rules:      evdev
             //model:      pc105
             //layout:     us
             //options:    grp:win_space_toggle,terminate:ctrl_alt_bksp
-            linuxNonUbuntuKeyboardLayouts = executeNativeCommand(arrayOf("setxkbmap", "-query"))
+            linuxKeyboardLayoutsCache = executeNativeCommand(arrayOf("setxkbmap", "-query"))
                 .substringAfter("layout:")
                 .substringBefore("\n")
                 .trim()
                 .split(",")
         }
 
-        // output example: Keyboard Control:
+        // Output example: Keyboard Control:
         //  auto repeat:  on    key click percent:  0    LED mask:  00000000
         //  XKB indicators:
         //    00: Caps Lock:   off    01: Num Lock:    off    02: Scroll Lock: off
@@ -177,27 +106,27 @@ class KeyboardLayout {
             .toInt(16)
 
         // Additional check to avoid out-of-bounds exception
-        if (linuxCurrentKeyboardLayoutIndex >= linuxNonUbuntuKeyboardLayouts.size) {
-            return KeyboardLayoutInfo(unknown, unknown, unknown)
+        if (linuxCurrentKeyboardLayoutIndex >= linuxKeyboardLayoutsCache.size) {
+            return getUnknownLayoutInfo()
         }
 
         // This is a bad solution because it returns 0 if it's a default layout and 1 in other cases,
         // and if user has more than two layouts, we do not know which one is really on
-        if (linuxNonUbuntuKeyboardLayouts.size > 2 && linuxCurrentKeyboardLayoutIndex > 0) {
-            return KeyboardLayoutInfo(unknown, unknown, unknown)
+        if (linuxKeyboardLayoutsCache.size > 2 && linuxCurrentKeyboardLayoutIndex > 0) {
+            return getUnknownLayoutInfo()
         }
 
-        val country = linuxNonUbuntuKeyboardLayouts[linuxCurrentKeyboardLayoutIndex]
+        val country = linuxKeyboardLayoutsCache[linuxCurrentKeyboardLayoutIndex]
         return KeyboardLayoutInfo("", country, "")
     }
 
-    private fun getMacKeyboardLayout(): KeyboardLayoutInfo {
+    private fun getMacLayoutInfo(): KeyboardLayoutInfo {
         val locale = InputContext.getInstance().locale
-        val variant = macKeyboardVariantMap[locale.variant] ?: "" // variant example for US: UserDefined_252
+        val variant = MacKeyboardVariants[locale.variant] ?: "" // variant example for US: UserDefined_252
         return KeyboardLayoutInfo(locale.language, locale.country, variant)
     }
 
-    private fun getWindowsKeyboardLayout(): KeyboardLayoutInfo {
+    private fun getWindowsLayoutInfo(): KeyboardLayoutInfo {
         val locale = InputContext.getInstance().locale
         // Standard locale object does not return correct info in case user set different keyboard inputs for one language
         // see: https://github.com/siropkin/kursor/issues/4
@@ -215,21 +144,12 @@ class KeyboardLayout {
         val inputMethod = hkl.pointer.toString().split("@")[1]
         var layoutId = inputMethod.substring(0, inputMethod.length - 4)
         layoutId = when (layoutId) {
-            "0xfffffffff008" -> {
-                "00010419"
-            }
-            "0xfffffffff014" -> {
-                "0001041F"
-            }
-            "0xfffffffff012" -> {
-                "00010407"
-            }
-            else -> {
-                layoutId.substring(2).padStart(8, '0')
-            }
+            "0xfffffffff008" -> "00010419"
+            "0xfffffffff014" -> "0001041F"
+            "0xfffffffff012" -> "00010407"
+            else -> layoutId.substring(2).padStart(8, '0')
         }
-        layoutId = layoutId.uppercase()
-        val variant = windowsKeyboardVariantMap[layoutId] ?: ""
+        val variant = WindowsKeyboardVariants[layoutId.uppercase()] ?: ""
         return KeyboardLayoutInfo(locale.language, locale.country, variant)
     }
 
