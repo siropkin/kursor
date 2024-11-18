@@ -1,7 +1,6 @@
-package com.github.siropkin.kursor.settings
+package com.github.siropkin.kursor
 
-import com.github.siropkin.kursor.IndicatorPosition
-import com.github.siropkin.kursor.keyboardlayout.KeyboardLayout
+import com.github.siropkin.kursor.keyboard.Keyboard
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBCheckBox
@@ -20,7 +19,7 @@ private const val LABEL_SPACING = 10
 private const val COMPONENT_SPACING = 35
 
 class KursorSettingsComponent {
-    private val keyboardLayout = KeyboardLayout()
+    private val keyboardLayout = Keyboard()
 
     private val defaultLanguageComponent = JBTextField("", 5)
     private val detectKeyboardLayoutButton = JButton("Detect Keyboard Layout")
@@ -37,7 +36,7 @@ class KursorSettingsComponent {
     private val textIndicatorFontSizeComponent = JBTextField()
     private val textIndicatorFontAlphaComponent = JBTextField()
 
-    private val textIndicatorVerticalPositionComponent = ComboBox(arrayOf(IndicatorPosition.TOP, IndicatorPosition.MIDDLE, IndicatorPosition.BOTTOM))
+    private val textIndicatorVerticalPositionComponent = ComboBox(arrayOf(TextIndicatorVerticalPositions.TOP, TextIndicatorVerticalPositions.MIDDLE, TextIndicatorVerticalPositions.BOTTOM))
     private val textIndicatorHorizontalOffsetComponent = JBTextField()
 
     var panel: JPanel = FormBuilder.createFormBuilder()
@@ -148,7 +147,7 @@ class KursorSettingsComponent {
         languagePanel.add(detectKeyboardLayoutButton, createRbc(2, 0, 1.0, COMPONENT_SPACING))
 
         detectKeyboardLayoutButton.addActionListener {
-            defaultLanguageComponent.text = keyboardLayout.getLayoutInfo().toString().lowercase()
+            defaultLanguageComponent.text = keyboardLayout.getLayout().toString().lowercase()
         }
 
         return languagePanel

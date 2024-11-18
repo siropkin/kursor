@@ -8,11 +8,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable
                 parentId="tools"
-                instance="com.github.siropkin.kursor.settings.KursorSettingsConfigurable"
-                id="com.github.siropkin.kursor.settings.KursorSettingsConfigurable"
+                instance="com.github.siropkin.kursor.KursorSettingsConfigurable"
+                id="com.github.siropkin.kursor.KursorSettingsConfigurable"
                 displayName="Kursor"
         />
-        <applicationService serviceImplementation="com.github.siropkin.kursor.settings.KursorSettings"/>
+        <applicationService serviceImplementation="com.github.siropkin.kursor.KursorSettings"/>
         <postStartupActivity implementation="com.github.siropkin.kursor.KursorStartupActivity" />
     </extensions>
 </idea-plugin>

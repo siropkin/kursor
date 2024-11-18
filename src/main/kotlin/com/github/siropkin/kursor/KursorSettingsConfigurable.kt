@@ -1,4 +1,4 @@
-package com.github.siropkin.kursor.settings
+package com.github.siropkin.kursor
 
 import com.intellij.openapi.options.Configurable
 import javax.swing.JComponent

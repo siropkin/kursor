@@ -1,6 +1,7 @@
-package com.github.siropkin.kursor.keyboardlayout
+package com.github.siropkin.kursor.keyboard
 
 
+// Standard Layouts
 // https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-language-pack-default-values
 val WindowsKeyboardVariants = mapOf(
     "00000402" to "BG",
