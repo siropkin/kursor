@@ -1,6 +1,5 @@
-package com.github.siropkin.kursor.settings
+package com.github.siropkin.kursor
 
-import com.github.siropkin.kursor.IndicatorPosition
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -31,7 +30,7 @@ class KursorSettings : PersistentStateComponent<KursorSettings> {
     var textIndicatorFontSize: Int = 11
     var textIndicatorFontAlpha: Int = 180
 
-    var textIndicatorVerticalPosition: String = IndicatorPosition.TOP
+    var textIndicatorVerticalPosition: String = TextIndicatorVerticalPositions.TOP
     var textIndicatorHorizontalOffset: Int = 4
 
     var indicateCapsLock: Boolean = true

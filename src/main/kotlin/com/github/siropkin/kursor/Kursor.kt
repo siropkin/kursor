@@ -1,7 +1,6 @@
 package com.github.siropkin.kursor
 
-import com.github.siropkin.kursor.keyboardlayout.KeyboardLayout
-import com.github.siropkin.kursor.settings.KursorSettings
+import com.github.siropkin.kursor.keyboard.Keyboard
 import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.CaretVisualAttributes
 import com.intellij.openapi.editor.Editor
@@ -16,14 +15,8 @@ import java.awt.event.KeyEvent
 import javax.swing.JComponent
 
 
-object IndicatorPosition {
-    const val TOP = "top"
-    const val MIDDLE = "middle"
-    const val BOTTOM = "bottom"
-}
-
 class Kursor(private var editor: Editor): JComponent(), ComponentListener, CaretListener {
-    private val keyboardLayout = KeyboardLayout()
+    private val keyboard = Keyboard()
 
     init {
         editor.contentComponent.add(this)
@@ -117,14 +110,14 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             return
         }
 
-        val keyboardLayoutString = keyboardLayout.getLayoutInfo().toString()
-        if (keyboardLayoutString.isEmpty()) {
+        val keyboardLayout = keyboard.getLayout()
+        if (keyboardLayout.isEmpty()) {
             return
         }
 
         val settings = getSettings()
         val caret = getPrimaryCaret()
-        val caretColor = if (settings.changeColorOnNonDefaultLanguage && keyboardLayoutString.lowercase() != settings.defaultLanguage.lowercase()) {
+        val caretColor = if (settings.changeColorOnNonDefaultLanguage && keyboardLayout.toString().lowercase() != settings.defaultLanguage.lowercase()) {
             settings.colorOnNonDefaultLanguage
         } else {
             null
@@ -134,16 +127,20 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             setCaretColor(caret, caretColor)
         }
 
-        val isCapsLockOn = settings.indicateCapsLock && getIsCapsLockOn()
-        val showTextIndicator = settings.showTextIndicator && (settings.indicateDefaultLanguage || isCapsLockOn || keyboardLayoutString.lowercase() != settings.defaultLanguage.lowercase())
-        if (!showTextIndicator) {
+        if (!settings.showTextIndicator) {
             return
         }
 
-        val displayText = if (isCapsLockOn) {
-            keyboardLayoutString.uppercase()
+        val isCapsLockOn = settings.indicateCapsLock && getIsCapsLockOn()
+        val isDefaultLanguage = keyboardLayout.toString().lowercase() == settings.defaultLanguage.lowercase()
+        if (!isCapsLockOn && isDefaultLanguage && !settings.indicateDefaultLanguage) {
+            return
+        }
+
+        val textIndicatorString = if (isCapsLockOn) {
+            keyboardLayout.toString().uppercase()
         } else {
-            keyboardLayoutString.lowercase()
+            keyboardLayout.toString().lowercase()
         }
         val caretWidth = getCaretWidth(caret)
         val caretHeight = getCaretHeight(caret)
@@ -151,14 +148,14 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
         val indicatorOffsetX = caretWidth + settings.textIndicatorHorizontalOffset
         val indicatorOffsetY = when (settings.textIndicatorVerticalPosition) {
-            IndicatorPosition.TOP -> (if (caret.visualPosition.line == 0) settings.textIndicatorFontSize else settings.textIndicatorFontSize / 2) - 1
-            IndicatorPosition.MIDDLE -> caretHeight / 2 + settings.textIndicatorFontSize / 2 - 1
-            IndicatorPosition.BOTTOM -> caretHeight + 3
+            TextIndicatorVerticalPositions.TOP -> (if (caret.visualPosition.line == 0) settings.textIndicatorFontSize else settings.textIndicatorFontSize / 2) - 1
+            TextIndicatorVerticalPositions.MIDDLE -> caretHeight / 2 + settings.textIndicatorFontSize / 2 - 1
+            TextIndicatorVerticalPositions.BOTTOM -> caretHeight + 3
             else -> 0
         }
 
         g.font = Font(settings.textIndicatorFontName, settings.textIndicatorFontStyle, settings.textIndicatorFontSize)
         g.color = getColorWithAlpha(caretColor ?: getDefaultCaretColor()!!, settings.textIndicatorFontAlpha)
-        g.drawString(displayText, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
+        g.drawString(textIndicatorString, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
     }
 }

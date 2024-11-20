@@ -1,70 +1,72 @@
-package com.github.siropkin.kursor.keyboardlayout
+package com.github.siropkin.kursor.keyboard
 
 import com.sun.jna.Platform
 import com.sun.jna.platform.win32.User32
 import com.sun.jna.platform.win32.WinDef
 import com.sun.jna.platform.win32.WinDef.HKL
 import java.awt.im.InputContext
-import java.io.BufferedReader
-import java.io.IOException
 
 
-class KeyboardLayout {
-    private val unknown = "UNK"
-    private var linuxDistribution: String = System.getenv("DESKTOP_SESSION")?.lowercase() ?: ""
-    private var linuxDesktopGroup: String = System.getenv("XDG_SESSION_TYPE")?.lowercase() ?: ""
-    private var linuxKeyboardLayoutsCache: List<String> = emptyList()
+private const val UNKNOWN = "UNK"
 
-    fun getLayoutInfo(): KeyboardLayoutInfo {
+class Keyboard {
+    private var linuxConfig: LinuxConfig? = null
+
+    fun getLayout(): KeyboardLayout {
+        if (Platform.isLinux() && linuxConfig == null) {
+            linuxConfig = LinuxConfig()
+        }
         return when {
-            Platform.isLinux() -> getLinuxLayoutInfo()
-            Platform.isMac() -> getMacLayoutInfo()
-            Platform.isWindows() -> getWindowsLayoutInfo()
-            else -> getUnknownLayoutInfo()
+            Platform.isLinux() -> getLinuxLayout()
+            Platform.isMac() -> getMacLayout()
+            Platform.isWindows() -> getWindowsLayout()
+            else -> getUnknownLayout()
         }
     }
 
-    private fun getUnknownLayoutInfo(): KeyboardLayoutInfo {
-        return KeyboardLayoutInfo(unknown, unknown, unknown)
+    private fun getUnknownLayout(): KeyboardLayout {
+        return KeyboardLayout(UNKNOWN, UNKNOWN, UNKNOWN)
     }
 
-    private fun getLinuxLayoutInfo(): KeyboardLayoutInfo {
+    private fun getLinuxLayout(): KeyboardLayout {
         // InputContext.getInstance().locale is not working on Linux: it always returns "en_US"
         // This is not the ideal solution because it involves executing a shell command to know the current keyboard layout
         // which might affect the performance. And we have different commands for different Linux distributions.
         // But it is the only solution I found that works on Linux.
         // For Linux we know only keyboard layout and do not know keyboard language
+        val config = linuxConfig ?: return getUnknownLayout()
         return when {
-            linuxDistribution == "ubuntu" -> getUbuntuLayoutInfo()
-            linuxDesktopGroup == "wayland" -> getWaylandLayoutInfo()
-            else -> getOtherLinuxLayoutInfo()
+            config.distribution == "ubuntu" -> getUbuntuLayout()
+            config.desktopGroup == "wayland" -> getWaylandLayout()
+            else -> getOtherLinuxLayout()
         }
     }
 
-    private fun getUbuntuLayoutInfo(): KeyboardLayoutInfo {
+    private fun getUbuntuLayout(): KeyboardLayout {
         // Output example: [('xkb', 'us'), ('xkb', 'ru'), ('xkb', 'ca+eng')]
-        val split = executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
+        val split = Utils.executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
             .substringAfter("('xkb', '")
             .substringBefore("')")
             .split("+")
         val language = if (split.size > 1) split[1] else ""
         val country = split[0]
-        return KeyboardLayoutInfo(language, country, "")
+        return KeyboardLayout(language, country, "")
     }
 
-    private fun getWaylandLayoutInfo(): KeyboardLayoutInfo {
+    private fun getWaylandLayout(): KeyboardLayout {
         // FIXME: Other Linux distribution commands not working "Wayland",
         //  see: https://github.com/siropkin/kursor/issues/3
-        return getUnknownLayoutInfo()
+        return getUnknownLayout()
     }
 
-    private fun getOtherLinuxLayoutInfo(): KeyboardLayoutInfo {
-        if (linuxKeyboardLayoutsCache.isEmpty()) {
+    private fun getOtherLinuxLayout(): KeyboardLayout {
+        val config = linuxConfig ?: return getUnknownLayout()
+        if (config.availableKeyboardLayouts.isEmpty()) {
             // Output example: rules:      evdev
             //model:      pc105
             //layout:     us
             //options:    grp:win_space_toggle,terminate:ctrl_alt_bksp
-            linuxKeyboardLayoutsCache = executeNativeCommand(arrayOf("setxkbmap", "-query"))
+            config.availableKeyboardLayouts = Utils.executeNativeCommand(arrayOf("setxkbmap", "-query"))
                 .substringAfter("layout:")
                 .substringBefore("\n")
                 .trim()
@@ -98,7 +100,7 @@ class KeyboardLayout {
         //  Standby: 0    Suspend: 0    Off: 0
         //  DPMS is Enabled
         //  Monitor is On
-        val linuxCurrentKeyboardLayoutIndex = executeNativeCommand(arrayOf("xset", "-q"))
+        val linuxCurrentKeyboardLayoutIndex = Utils.executeNativeCommand(arrayOf("xset", "-q"))
             .substringAfter("LED mask:")
             .substringBefore("\n")
             .trim()
@@ -106,38 +108,37 @@ class KeyboardLayout {
             .toInt(16)
 
         // Additional check to avoid out-of-bounds exception
-        if (linuxCurrentKeyboardLayoutIndex >= linuxKeyboardLayoutsCache.size) {
-            return getUnknownLayoutInfo()
+        if (linuxCurrentKeyboardLayoutIndex >= config.availableKeyboardLayouts.size) {
+            return getUnknownLayout()
         }
 
         // This is a bad solution because it returns 0 if it's a default layout and 1 in other cases,
         // and if user has more than two layouts, we do not know which one is really on
-        if (linuxKeyboardLayoutsCache.size > 2 && linuxCurrentKeyboardLayoutIndex > 0) {
-            return getUnknownLayoutInfo()
+        if (config.availableKeyboardLayouts.size > 2 && linuxCurrentKeyboardLayoutIndex > 0) {
+            return getUnknownLayout()
         }
 
-        val country = linuxKeyboardLayoutsCache[linuxCurrentKeyboardLayoutIndex]
-        return KeyboardLayoutInfo("", country, "")
+        val country = config.availableKeyboardLayouts[linuxCurrentKeyboardLayoutIndex]
+        return KeyboardLayout("", country, "")
     }
 
-    private fun getMacLayoutInfo(): KeyboardLayoutInfo {
+    private fun getMacLayout(): KeyboardLayout {
         val locale = InputContext.getInstance().locale
-        // Variant example for US: UserDefined_252
-        val variant = MacKeyboardVariants[locale.variant] ?: ""
-        return KeyboardLayoutInfo(locale.language, locale.country, variant)
+        val localeVariant = locale.variant.removePrefix("UserDefined_")
+        val variant = MacStandardKeyboardVariants[localeVariant]
+            ?: MacSogouPinyinVariants[localeVariant]
+            ?: MacRimeSquirrelVariants[localeVariant]
+            ?: ""
+        return KeyboardLayout(locale.language, locale.country, variant)
     }
 
-    private fun getWindowsLayoutInfo(): KeyboardLayoutInfo {
+    private fun getWindowsLayout(): KeyboardLayout {
         val locale = InputContext.getInstance().locale
         // Standard locale object does not return correct info in case user set different keyboard inputs for one language
         // see: https://github.com/siropkin/kursor/issues/4
         val user32 = User32.INSTANCE
-        val fgWindow: WinDef.HWND? = user32.GetForegroundWindow() // Get the handle of the foreground window
-
-        if (fgWindow == null) {
-            return KeyboardLayoutInfo(locale.language, locale.country, "")
-        }
-
+        val fgWindow: WinDef.HWND = user32.GetForegroundWindow()
+            ?: return KeyboardLayout(locale.language, locale.country, "") // Get the handle of the foreground window
         val threadId = user32.GetWindowThreadProcessId(fgWindow, null) // Get the thread ID of the foreground window
         val hkl: HKL = user32.GetKeyboardLayout(threadId) // Get the keyboard layout for the thread
         // FIXME: It should be a better way how to convert pointer to string
@@ -151,18 +152,7 @@ class KeyboardLayout {
             else -> layoutId.substring(2).padStart(8, '0')
         }
         val variant = WindowsKeyboardVariants[layoutId.uppercase()] ?: ""
-        return KeyboardLayoutInfo(locale.language, locale.country, variant)
-    }
-
-    private fun executeNativeCommand(command: Array<String>): String {
-        return try {
-            val process = Runtime.getRuntime().exec(command)
-            process.waitFor()
-            process.inputStream.bufferedReader().use(BufferedReader::readText)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            ""
-        }
+        return KeyboardLayout(locale.language, locale.country, variant)
     }
 }
 
