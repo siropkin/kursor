@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.4.3]
+
+### Changed
+
+- Add support for IntelliJ IDEA 2024.3.
+
 ## [1.4.2]
 
 ### Changed
