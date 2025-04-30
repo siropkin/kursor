@@ -122,7 +122,8 @@ Version skipped due to a mistake in the release process.
 
 - Initial release
 
-[Unreleased]: https://github.com/siropkin/kursor/compare/v1.4.3...HEAD
+[Unreleased]: https://github.com/siropkin/kursor/compare/v1.4.4...HEAD
+[1.4.4]: https://github.com/siropkin/kursor/compare/v1.4.3...v1.4.4
 [1.4.3]: https://github.com/siropkin/kursor/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/siropkin/kursor/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/siropkin/kursor/compare/v1.4.0...v1.4.1
