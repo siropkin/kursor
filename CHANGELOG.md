@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.4.4]
+
+### Fixed
+
+- #39 Fix "java.lang.NullPointerException: GetForegroundWindow(...) must not be null"
+
 ## [1.4.3]
 
 ### Changed

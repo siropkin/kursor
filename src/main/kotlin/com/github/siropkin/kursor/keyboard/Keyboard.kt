@@ -137,8 +137,11 @@ class Keyboard {
         // Standard locale object does not return correct info in case user set different keyboard inputs for one language
         // see: https://github.com/siropkin/kursor/issues/4
         val user32 = User32.INSTANCE
-        val fgWindow: WinDef.HWND = user32.GetForegroundWindow()
-            ?: return KeyboardLayout(locale.language, locale.country, "") // Get the handle of the foreground window
+        val fgWindow: WinDef.HWND? = user32.GetForegroundWindow()
+        if (fgWindow == null) {
+            // Fallback: foreground window is not available, return locale-based layout
+            return KeyboardLayout(locale.language, locale.country, "")
+        }
         val threadId = user32.GetWindowThreadProcessId(fgWindow, null) // Get the thread ID of the foreground window
         val hkl: HKL = user32.GetKeyboardLayout(threadId) // Get the keyboard layout for the thread
         // FIXME: It should be a better way how to convert pointer to string
