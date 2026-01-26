@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.4.7]
+
+### Changed
+
+- Add support for IntelliJ IDEA 2025.3.
+
 ## [1.4.6]
 
 ### Changed
