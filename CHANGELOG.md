@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.4.8]
+
+### Changed
+
+- Update to IntelliJ Platform Gradle Plugin 2.10.5 and Gradle 9.2.1.
+
+### Fixed
+
+- Fix plugin verifier IDE resolution by using explicit version selection.
+
 ## [1.4.7]
 
 ### Changed
