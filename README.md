@@ -14,7 +14,7 @@
 ![Settings Screenshot](readme/settings.png)
 </div>
 
-> **Also available for [VS Code](https://github.com/siropkin/kursor-vscode)**
+> **Also available for [VS Code](https://marketplace.visualstudio.com/items?itemName=siropkin.kursor)**
 
 <!-- Plugin description -->
 ## What is Kursor?
