@@ -6,6 +6,8 @@
 
 *IntelliJ plugin for tracking keyboard language*
 
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat-square&logo=intellij-idea&logoColor=white)
+
 [![Rating](https://img.shields.io/jetbrains/plugin/r/stars/22072?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
 [![Version](https://img.shields.io/jetbrains/plugin/v/22072-kursor.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22072-kursor)
