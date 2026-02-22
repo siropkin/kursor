@@ -14,7 +14,7 @@
 ![Settings Screenshot](readme/settings.png)
 </div>
 
-> **Also available for VS Code: [GitHub](https://github.com/siropkin/kursor-vscode) | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=siropkin.kursor) | [Open VSX (Cursor)](https://open-vsx.org/extension/siropkin/kursor)**
+> **Also available for VS Code: [GitHub](https://github.com/siropkin/kursor-vscode) | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=siropkin.kursor) | [Cursor Marketplace](https://open-vsx.org/extension/siropkin/kursor)**
 
 <!-- Plugin description -->
 ## What is Kursor?
