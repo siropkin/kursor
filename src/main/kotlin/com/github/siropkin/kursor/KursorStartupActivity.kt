@@ -40,7 +40,7 @@ class KursorStartupActivity: ProjectActivity {
         }, project)
 
         // add key listener
-        IdeEventQueue.getInstance().addDispatcher({ event ->
+        IdeEventQueue.getInstance().addPostprocessor({ event ->
             if (event is KeyEvent) {
                 kursors.forEach { (_, kursor) -> kursor.repaint() }
             }

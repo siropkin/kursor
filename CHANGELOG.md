@@ -12,6 +12,7 @@
 - Add Apple Chinese input method detection on macOS.
 - Improve Linux keyboard layout detection for GNOME-based distributions.
 - Fix Chinese input methods displaying "cn" instead of "zh".
+- Replace deprecated `IdeEventQueue.addDispatcher` with `addPostprocessor` for IntelliJ 2026.1 compatibility.
 
 ## [1.4.8]
 
