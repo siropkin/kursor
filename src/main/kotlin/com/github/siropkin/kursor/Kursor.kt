@@ -99,10 +99,6 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         caret.visualAttributes = CaretVisualAttributes(color, caret.visualAttributes.weight)
     }
 
-    private fun getColorWithAlpha(color: Color, alpha: Int): Color {
-        return Color(color.red, color.green, color.blue, alpha)
-    }
-
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
 
@@ -117,8 +113,9 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
 
         val settings = getSettings()
         val caret = getPrimaryCaret()
-        val caretColor = if (settings.changeColorOnNonDefaultLanguage && keyboardLayout.toString().lowercase() != settings.defaultLanguage.lowercase()) {
-            settings.colorOnNonDefaultLanguage
+        val isNonDefaultLanguage = keyboardLayout.toString().lowercase() != settings.defaultLanguage.lowercase()
+        val caretColor = if (settings.cursorColor != null && isNonDefaultLanguage) {
+            settings.cursorColor
         } else {
             null
         }
@@ -132,7 +129,7 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
         }
 
         val isCapsLockOn = settings.indicateCapsLock && getIsCapsLockOn()
-        val isDefaultLanguage = keyboardLayout.toString().lowercase() == settings.defaultLanguage.lowercase()
+        val isDefaultLanguage = !isNonDefaultLanguage
         if (!isCapsLockOn && isDefaultLanguage && !settings.indicateDefaultLanguage) {
             return
         }
@@ -143,19 +140,32 @@ class Kursor(private var editor: Editor): JComponent(), ComponentListener, Caret
             keyboardLayout.toString().lowercase()
         }
         val caretWidth = getCaretWidth(caret)
-        val caretHeight = getCaretHeight(caret)
         val caretPosition = getCaretPosition(caret)
 
-        val indicatorOffsetX = caretWidth + settings.textIndicatorHorizontalOffset
-        val indicatorOffsetY = when (settings.textIndicatorVerticalPosition) {
-            TextIndicatorVerticalPositions.TOP -> (if (caret.visualPosition.line == 0) settings.textIndicatorFontSize else settings.textIndicatorFontSize / 2) - 1
-            TextIndicatorVerticalPositions.MIDDLE -> caretHeight / 2 + settings.textIndicatorFontSize / 2 - 1
-            TextIndicatorVerticalPositions.BOTTOM -> caretHeight + 3
-            else -> 0
+        val editorFontName = editor.colorsScheme.editorFontName
+        val editorFontSize = editor.colorsScheme.editorFontSize
+        val indicatorFontSize = (editorFontSize * 0.8).toInt().coerceAtLeast(8)
+
+        val indicatorOffsetX = caretWidth + 4
+        val indicatorOffsetY = (if (caret.visualPosition.line == 0) indicatorFontSize else indicatorFontSize / 2) - 1
+
+        val font = Font(editorFontName, Font.PLAIN, indicatorFontSize)
+        g.font = font
+
+        val textX = caretPosition.x + indicatorOffsetX
+        val textY = caretPosition.y + indicatorOffsetY
+
+        if (settings.textIndicatorBackgroundColor != null) {
+            val metrics = g.fontMetrics
+            val textWidth = metrics.stringWidth(textIndicatorString)
+            val textHeight = metrics.height
+            val bgX = textX - 1
+            val bgY = textY - metrics.ascent
+            g.color = settings.textIndicatorBackgroundColor
+            g.fillRect(bgX, bgY, textWidth + 2, textHeight)
         }
 
-        g.font = Font(settings.textIndicatorFontName, settings.textIndicatorFontStyle, settings.textIndicatorFontSize)
-        g.color = getColorWithAlpha(caretColor ?: getDefaultCaretColor()!!, settings.textIndicatorFontAlpha)
-        g.drawString(textIndicatorString, caretPosition.x + indicatorOffsetX, caretPosition.y + indicatorOffsetY)
+        g.color = settings.textIndicatorColor
+        g.drawString(textIndicatorString, textX, textY)
     }
 }

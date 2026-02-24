@@ -1,14 +1,15 @@
 package com.github.siropkin.kursor
 
 import com.github.siropkin.kursor.keyboard.Keyboard
-import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.JBUI
-import java.awt.*
+import java.awt.Color
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComponent
@@ -24,26 +25,18 @@ class KursorSettingsComponent {
     private val defaultLanguageComponent = JBTextField("", 5)
     private val detectKeyboardLayoutButton = JButton("Detect Keyboard Layout")
 
-    private val changeColorOnNonDefaultLanguageComponent = JBCheckBox("Change color on non-default language")
-    private val colorOnNonDefaultLanguageComponent = ColorPanel()
+    private val cursorColorComponent = ColorPanel()
 
     private val showTextIndicatorComponent = JBCheckBox("Show text indicator")
-    private val indicateCapsLockComponent = JBCheckBox("Indicate 'Caps Lock'")
     private val indicateDefaultLanguageComponent = JBCheckBox("Show default language")
-
-    private val textIndicatorFontNameComponent = ComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames)
-    private val textIndicatorFontStyleComponent = ComboBox(arrayOf(Font.PLAIN.toString(), Font.BOLD.toString(), Font.ITALIC.toString()))
-    private val textIndicatorFontSizeComponent = JBTextField()
-    private val textIndicatorFontAlphaComponent = JBTextField()
-
-    private val textIndicatorVerticalPositionComponent = ComboBox(arrayOf(TextIndicatorVerticalPositions.TOP, TextIndicatorVerticalPositions.MIDDLE, TextIndicatorVerticalPositions.BOTTOM))
-    private val textIndicatorHorizontalOffsetComponent = JBTextField()
+    private val indicateCapsLockComponent = JBCheckBox("Indicate 'Caps Lock'")
+    private val textIndicatorColorComponent = ColorPanel()
+    private val textIndicatorBackgroundColorComponent = ColorPanel()
 
     var panel: JPanel = FormBuilder.createFormBuilder()
         .addComponent(createLanguagePanel())
-        .addComponent(createColorPanel())
+        .addComponent(createCursorPanel())
         .addComponent(createIndicatorPanel())
-        .addComponent(createPositionPanel())
         .addComponentFillVertically(JPanel(), 0)
         .panel
 
@@ -56,18 +49,10 @@ class KursorSettingsComponent {
             defaultLanguageComponent.text = value.lowercase()
         }
 
-    var changeColorOnNonDefaultLanguage: Boolean
-        get() = changeColorOnNonDefaultLanguageComponent.isSelected
+    var cursorColor: Color?
+        get() = cursorColorComponent.selectedColor
         set(value) {
-            changeColorOnNonDefaultLanguageComponent.isSelected = value
-        }
-
-    var colorOnNonDefaultLanguage: Color?
-        get() = colorOnNonDefaultLanguageComponent.selectedColor
-        set(value) {
-            value?.let {
-                colorOnNonDefaultLanguageComponent.selectedColor = Color(it.red, it.green, it.blue)
-            }
+            cursorColorComponent.selectedColor = value
         }
 
     var showTextIndicator: Boolean
@@ -88,55 +73,16 @@ class KursorSettingsComponent {
             indicateDefaultLanguageComponent.isSelected = value
         }
 
-    var textIndicatorFontName: String
-        get() = textIndicatorFontNameComponent.selectedItem as String
+    var textIndicatorColor: Color?
+        get() = textIndicatorColorComponent.selectedColor
         set(value) {
-            textIndicatorFontNameComponent.selectedItem = value
+            textIndicatorColorComponent.selectedColor = value
         }
 
-    var textIndicatorFontStyle: Int
-        get() = (textIndicatorFontStyleComponent.selectedItem as String).toInt()
+    var textIndicatorBackgroundColor: Color?
+        get() = textIndicatorBackgroundColorComponent.selectedColor
         set(value) {
-            textIndicatorFontStyleComponent.selectedItem = value.toString()
-        }
-
-    var textIndicatorFontSize: Int
-        get() = textIndicatorFontSizeComponent.text.toInt()
-        set(value) {
-            try {
-                val intValue = Integer.parseInt(value.toString())
-                textIndicatorFontSizeComponent.text = intValue.coerceAtLeast(5).coerceAtMost(20).toString()
-            } catch (_: NumberFormatException) {
-                // indicatorFontSizeComponent.text = ""
-            }
-        }
-
-    var textIndicatorFontAlpha: Int
-        get() = textIndicatorFontAlphaComponent.text.toInt()
-        set(value) {
-            try {
-                val intValue = Integer.parseInt(value.toString())
-                textIndicatorFontAlphaComponent.text = intValue.coerceAtLeast(0).coerceAtMost(255).toString()
-            } catch (_: NumberFormatException) {
-                // indicatorFontAlphaComponent.text = ""
-            }
-        }
-
-    var textIndicatorVerticalPosition: String
-        get() = textIndicatorVerticalPositionComponent.selectedItem as String
-        set(value) {
-            textIndicatorVerticalPositionComponent.selectedItem = value
-        }
-
-    var textIndicatorHorizontalOffset: Int
-        get() = textIndicatorHorizontalOffsetComponent.text.toInt()
-        set(value) {
-            try {
-                val intValue = Integer.parseInt(value.toString())
-                textIndicatorHorizontalOffsetComponent.text = intValue.coerceAtLeast(-10).coerceAtMost(10).toString()
-            } catch (_: NumberFormatException) {
-                // indicatorHorizontalOffsetComponent.text = ""
-            }
+            textIndicatorBackgroundColorComponent.selectedColor = value
         }
 
     private fun createLanguagePanel(): JPanel {
@@ -153,17 +99,13 @@ class KursorSettingsComponent {
         return languagePanel
     }
 
-    private fun createColorPanel(): JPanel {
-        val colorPanel = JPanel()
-        colorPanel.layout = GridBagLayout()
-        colorPanel.add(changeColorOnNonDefaultLanguageComponent, createRbc(0, 0, 0.0))
-        colorPanel.add(colorOnNonDefaultLanguageComponent, createRbc(1, 0, 1.0, LABEL_SPACING))
+    private fun createCursorPanel(): JPanel {
+        val cursorPanel = JPanel()
+        cursorPanel.layout = GridBagLayout()
+        cursorPanel.add(JBLabel("Cursor color:"), createRbc(0, 0, 0.0))
+        cursorPanel.add(cursorColorComponent, createRbc(1, 0, 1.0, LABEL_SPACING))
 
-        changeColorOnNonDefaultLanguageComponent.addChangeListener {
-            colorOnNonDefaultLanguageComponent.isEnabled = changeColorOnNonDefaultLanguage
-        }
-
-        return colorPanel
+        return cursorPanel
     }
 
     private fun createIndicatorPanel(): JPanel {
@@ -173,46 +115,27 @@ class KursorSettingsComponent {
         checkBoxPanel.add(indicateDefaultLanguageComponent, createRbc(1, 0, 0.0, COMPONENT_SPACING))
         checkBoxPanel.add(indicateCapsLockComponent, createRbc(2, 0, 1.0, COMPONENT_SPACING))
 
-        val fontPanel = JPanel()
-        fontPanel.layout = GridBagLayout()
-        fontPanel.add(JBLabel("Font:"), createRbc(0, 0, 0.0))
-        fontPanel.add(textIndicatorFontNameComponent, createRbc(1, 0, 0.0, LABEL_SPACING))
-        fontPanel.add(JBLabel("Size:"), createRbc(2, 0, 0.0, COMPONENT_SPACING))
-        fontPanel.add(textIndicatorFontSizeComponent, createRbc(3, 0, 0.0, LABEL_SPACING))
-        fontPanel.add(JBLabel("Opacity:"), createRbc(4, 0, 0.0, COMPONENT_SPACING))
-        fontPanel.add(textIndicatorFontAlphaComponent, createRbc(5, 0, 1.0, LABEL_SPACING))
+        val colorPanel = JPanel()
+        colorPanel.layout = GridBagLayout()
+        colorPanel.add(JBLabel("Text color:"), createRbc(0, 0, 0.0))
+        colorPanel.add(textIndicatorColorComponent, createRbc(1, 0, 0.0, LABEL_SPACING))
+        colorPanel.add(JBLabel("Background color:"), createRbc(2, 0, 0.0, COMPONENT_SPACING))
+        colorPanel.add(textIndicatorBackgroundColorComponent, createRbc(3, 0, 1.0, LABEL_SPACING))
 
         showTextIndicatorComponent.addChangeListener {
-            indicateDefaultLanguageComponent.isEnabled = showTextIndicator
-            indicateCapsLockComponent.isEnabled = showTextIndicator
-            textIndicatorFontNameComponent.isEnabled = showTextIndicator
-            textIndicatorFontStyleComponent.isEnabled = showTextIndicator
-            textIndicatorFontSizeComponent.isEnabled = showTextIndicator
-            textIndicatorFontAlphaComponent.isEnabled = showTextIndicator
-            textIndicatorVerticalPositionComponent.isEnabled = showTextIndicator
-            textIndicatorHorizontalOffsetComponent.isEnabled = showTextIndicator
+            val enabled = showTextIndicator
+            indicateDefaultLanguageComponent.isEnabled = enabled
+            indicateCapsLockComponent.isEnabled = enabled
+            textIndicatorColorComponent.isEnabled = enabled
+            textIndicatorBackgroundColorComponent.isEnabled = enabled
         }
 
         val container = JPanel()
         container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
         container.add(checkBoxPanel)
-        container.add(fontPanel)
+        container.add(colorPanel)
 
         return container
-    }
-
-    private fun createPositionPanel(): JPanel {
-        val positionPanel = JPanel()
-        positionPanel.layout = GridBagLayout()
-        positionPanel.add(JBLabel("Vertical position:"), createRbc(0, 0, 0.0))
-        positionPanel.add(textIndicatorVerticalPositionComponent, createRbc(1, 0, 0.0, LABEL_SPACING))
-        positionPanel.add(JBLabel("Horizontal offset:"), createRbc(2, 0, 0.0, COMPONENT_SPACING))
-        positionPanel.add(textIndicatorHorizontalOffsetComponent, createRbc(3, 0, 1.0, LABEL_SPACING))
-
-        textIndicatorVerticalPositionComponent.maximumSize = Dimension(200, textIndicatorVerticalPositionComponent.preferredSize.height)
-        textIndicatorHorizontalOffsetComponent.maximumSize = Dimension(100, textIndicatorHorizontalOffsetComponent.preferredSize.height)
-
-        return positionPanel
     }
 
     private fun createRbc(x: Int, y: Int, weightx: Double): GridBagConstraints {

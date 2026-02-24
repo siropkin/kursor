@@ -36,13 +36,13 @@ class Keyboard {
         // For Linux we know only keyboard layout and do not know keyboard language
         val config = linuxConfig ?: return getUnknownLayout()
         return when {
-            config.distribution == "ubuntu" -> getUbuntuLayout()
+            config.distribution.startsWith("ubuntu") || config.desktopEnvironment.contains("gnome") -> getGnomeLayout()
             config.desktopGroup == "wayland" -> getWaylandLayout()
             else -> getOtherLinuxLayout()
         }
     }
 
-    private fun getUbuntuLayout(): KeyboardLayout {
+    private fun getGnomeLayout(): KeyboardLayout {
         // Output example: [('xkb', 'us'), ('xkb', 'ru'), ('xkb', 'ca+eng')]
         val split = Utils.executeNativeCommand(arrayOf("gsettings", "get", "org.gnome.desktop.input-sources", "mru-sources"))
             .substringAfter("('xkb', '")
@@ -126,9 +126,10 @@ class Keyboard {
         val locale = InputContext.getInstance().locale
         val localeVariant = locale.variant.removePrefix("UserDefined_")
         val variant = MacStandardKeyboardVariants[localeVariant]
+            ?: MacAppleChineseVariants[localeVariant]
             ?: MacSogouPinyinVariants[localeVariant]
             ?: MacRimeSquirrelVariants[localeVariant]
-            ?: ""
+            ?: if (locale.language == "zh") "ZH" else ""
         return KeyboardLayout(locale.language, locale.country, variant)
     }
 

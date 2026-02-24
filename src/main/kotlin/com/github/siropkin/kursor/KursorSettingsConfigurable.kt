@@ -24,17 +24,12 @@ class KursorSettingsConfigurable: Configurable {
         val settings = KursorSettings.getInstance()
         settingsComponent?.let {
             return it.defaultLanguage != settings.defaultLanguage
-                    || it.changeColorOnNonDefaultLanguage != settings.changeColorOnNonDefaultLanguage
-                    || it.colorOnNonDefaultLanguage != settings.colorOnNonDefaultLanguage
+                    || it.cursorColor != settings.cursorColor
                     || it.showTextIndicator != settings.showTextIndicator
                     || it.indicateCapsLock != settings.indicateCapsLock
                     || it.indicateDefaultLanguage != settings.indicateDefaultLanguage
-                    || it.textIndicatorFontName != settings.textIndicatorFontName
-                    || it.textIndicatorFontStyle != settings.textIndicatorFontStyle
-                    || it.textIndicatorFontSize != settings.textIndicatorFontSize
-                    || it.textIndicatorFontAlpha != settings.textIndicatorFontAlpha
-                    || it.textIndicatorVerticalPosition != settings.textIndicatorVerticalPosition
-                    || it.textIndicatorHorizontalOffset != settings.textIndicatorHorizontalOffset
+                    || it.textIndicatorColor != settings.textIndicatorColor
+                    || it.textIndicatorBackgroundColor != settings.textIndicatorBackgroundColor
         }
         return false
     }
@@ -42,34 +37,24 @@ class KursorSettingsConfigurable: Configurable {
     override fun apply() {
         val settings = KursorSettings.getInstance()
         settings.defaultLanguage = settingsComponent!!.defaultLanguage
-        settings.changeColorOnNonDefaultLanguage = settingsComponent!!.changeColorOnNonDefaultLanguage
-        settings.colorOnNonDefaultLanguage = settingsComponent!!.colorOnNonDefaultLanguage!!
+        settings.cursorColor = settingsComponent!!.cursorColor
         settings.showTextIndicator = settingsComponent!!.showTextIndicator
         settings.indicateCapsLock = settingsComponent!!.indicateCapsLock
         settings.indicateDefaultLanguage = settingsComponent!!.indicateDefaultLanguage
-        settings.textIndicatorFontName = settingsComponent!!.textIndicatorFontName
-        settings.textIndicatorFontStyle = settingsComponent!!.textIndicatorFontStyle
-        settings.textIndicatorFontSize = settingsComponent!!.textIndicatorFontSize
-        settings.textIndicatorFontAlpha = settingsComponent!!.textIndicatorFontAlpha
-        settings.textIndicatorVerticalPosition = settingsComponent!!.textIndicatorVerticalPosition
-        settings.textIndicatorHorizontalOffset = settingsComponent!!.textIndicatorHorizontalOffset
+        settings.textIndicatorColor = settingsComponent!!.textIndicatorColor ?: settings.textIndicatorColor
+        settings.textIndicatorBackgroundColor = settingsComponent!!.textIndicatorBackgroundColor
     }
 
     override fun reset() {
         val settings = KursorSettings.getInstance()
         settingsComponent?.let {
             it.defaultLanguage = settings.defaultLanguage
-            it.changeColorOnNonDefaultLanguage = settings.changeColorOnNonDefaultLanguage
-            it.colorOnNonDefaultLanguage = settings.colorOnNonDefaultLanguage
+            it.cursorColor = settings.cursorColor
             it.showTextIndicator = settings.showTextIndicator
             it.indicateCapsLock = settings.indicateCapsLock
             it.indicateDefaultLanguage = settings.indicateDefaultLanguage
-            it.textIndicatorFontName = settings.textIndicatorFontName
-            it.textIndicatorFontStyle = settings.textIndicatorFontStyle
-            it.textIndicatorFontSize = settings.textIndicatorFontSize
-            it.textIndicatorFontAlpha = settings.textIndicatorFontAlpha
-            it.textIndicatorVerticalPosition = settings.textIndicatorVerticalPosition
-            it.textIndicatorHorizontalOffset = settings.textIndicatorHorizontalOffset
+            it.textIndicatorColor = settings.textIndicatorColor
+            it.textIndicatorBackgroundColor = settings.textIndicatorBackgroundColor
         }
     }
 
