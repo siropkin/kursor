@@ -30,11 +30,10 @@ This feature is particularly beneficial for developers juggling multiple languag
 
 ### Features
 - **🎨 Cursor Color Change:** Automatically changes the cursor color based on the current language.
-- **🔤 Language Indicator:** Displays the current language on the cursor.
+- **🔤 Language Indicator:** Displays the current language on the cursor with customizable text and background colors.
 - **🔒 Caps Lock Indicator:** Shows the Caps Lock status on the cursor.
-- **🔧 Customization:** Customize the language indicator's font, size, opacity, and position.
-- **🖥️ Supported Operating Systems:** Available on Windows, Mac, and Linux.
-- **🌐 Supported Languages And Input Methods:** Supports a wide range of languages and input methods, including [Sogou Pinyin](https://pinyin.sogou.com/mac) and [Squirrel](https://rime.im) Zhuyin methods on macOS.
+- **🖥️ Supported Operating Systems:** Available on Windows, Mac, and Linux (including GNOME-based distributions).
+- **🌐 Supported Languages And Input Methods:** Supports a wide range of languages and input methods, including Apple Chinese input methods, [Sogou Pinyin](https://pinyin.sogou.com/mac), and [Squirrel](https://rime.im) Zhuyin methods on macOS.
 
 
 ## Usage
@@ -50,15 +49,12 @@ You can customize Kursor's settings to suit your preferences:
 
 ### Settings
 - **Default Language:** The default language for your IDE.
-- **Change Color on Non-Default Language:** Changes the cursor color if the language is not the default.
+- **Cursor Color:** The cursor color when a non-default language is active. Leave empty to disable color change.
 - **Show Text Indicator:** Displays a language indicator on the cursor. If disabled, only the cursor color will be changed.
 - **Show Default Language:** Shows the default language on the cursor when enabled.
 - **Indicate Caps Lock:** Displays a Caps Lock indicator on the cursor. The language will be shown in uppercase.
-- **Font:** The font used for the language indicator.
-- **Size:** Font size of the language indicator.
-- **Opacity:** Opacity of the language indicator (0 - transparent, 255 - opaque).
-- **Vertical Position:** Vertical position of the language indicator (top, middle, or bottom).
-- **Horizontal Offset:** Horizontal offset of the language indicator.
+- **Text Color:** The color of the language indicator text.
+- **Background Color:** Optional background color behind the language indicator. Leave empty for no background.
 
 
 ## Feedback and Suggestions

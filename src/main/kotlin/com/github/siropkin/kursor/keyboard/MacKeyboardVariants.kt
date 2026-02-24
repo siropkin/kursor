@@ -14,6 +14,18 @@ val MacSogouPinyinVariants = mapOf(
     "com.sogou.inputmethod.pinyin" to "ZH"
 )
 
+// Apple Chinese Input Methods
+val MacAppleChineseVariants = mapOf(
+    "com.apple.inputmethod.SCIM" to "ZH",
+    "com.apple.inputmethod.SCIM.ITABC" to "ZH",
+    "com.apple.inputmethod.SCIM.WBX" to "ZH",
+    "com.apple.inputmethod.SCIM.Shuangpin" to "ZH",
+    "com.apple.inputmethod.TCIM" to "ZH",
+    "com.apple.inputmethod.TCIM.Zhuyin" to "ZH",
+    "com.apple.inputmethod.TCIM.Cangjie" to "ZH",
+    "com.apple.inputmethod.TCIM.Pinyin" to "ZH",
+)
+
 // Rime Squirrel Layouts https://rime.im
 val MacRimeSquirrelVariants = mapOf(
     "im.rime.inputmethod.Squirrel.Hans" to "ZH", // Simplified

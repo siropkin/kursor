@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [1.5.0]
+
+### Changed
+
+- Simplify settings: remove font, opacity, and position options (auto-derived from editor).
+- Separate cursor color and text indicator color into independent settings.
+- Add text indicator background color option.
+- Add Apple Chinese input method detection on macOS.
+- Improve Linux keyboard layout detection for GNOME-based distributions.
+- Fix Chinese input methods displaying "cn" instead of "zh".
+
 ## [1.4.8]
 
 ### Changed
