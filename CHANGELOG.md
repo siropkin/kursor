@@ -13,6 +13,8 @@
 - Improve Linux keyboard layout detection for GNOME-based distributions.
 - Fix Chinese input methods displaying "cn" instead of "zh".
 - Replace deprecated `IdeEventQueue.addDispatcher` with `addPostprocessor` for IntelliJ 2026.1 compatibility.
+- Add support for IntelliJ IDEA 2026.1.
+- Remove `pluginUntilBuild` to support all future IDE versions automatically.
 
 ## [1.4.8]
 
